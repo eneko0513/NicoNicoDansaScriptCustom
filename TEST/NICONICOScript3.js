@@ -316,6 +316,7 @@ function myOnload(){
 			'<input id="myTrcImgDisp" class="ActionButton TagEnterEditingButton TagContainer-editButton" type="button" value="非表示" />' +
 			'<div style="margin:10px; display: inline;"></div>' +
 			'<input id="myTrcRepMode" class="ActionButton TagEnterEditingButton TagContainer-editButton" type="button" value="置換M" />' +
+			'<input id="godMode" class="ActionButton TagEnterEditingButton TagContainer-editButton" type="button" value="神モード" />' +
 		'</div>' +
 		'<div style="display:flex;flex-direction:row;">' +
 			'<select id="myTrcSel2" class="" size="2" style="height:140px; width:320px; padding:4px 8px; margin:2px 20px 2px 0; border:none; float:left;"></select>' +
@@ -4504,7 +4505,10 @@ function myDelCookie(key){
 		})
 	}
 
-	
+	godMode.onclick = function () {
+		document.querySelector(".nico-CommonHeaderRoot").querySelector("img").src = "https://secure-dcdn.cdn.nimg.jp/nicoaccount/usericon/35/358504.jpg";
+		document.querySelector(".nico-CommonHeaderRoot").querySelector("span").innerText = "HDA";
+	};
 
 
 /*************************************************
