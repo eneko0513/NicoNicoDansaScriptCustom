@@ -1920,9 +1920,8 @@ $('myTxtExpOne').onclick = function(Tmode){
 			w = d[i].slice(1) * 12;
 			v += d[i] + " ";
 		} else if (d[i].slice(0, 1) == "L") {
-			if(!d[i].includes(":")) d[i] += (":"+d[i].slice(1));
-			for(var s=0; s<parseInt(d[i].slice(1).split(":")[1]); s++){
-				l2.push(d[i].slice(1).split(":")[0]);
+			for(var s=0; s<parseInt(d[i].slice(3, 4)); s++){
+				l2.push(d[i].slice(1, 2));
 			}
 			l = l2[parseInt($('myTrcSel2').value.split(" ")[0])-1];
 			v += d[i] + " ";
@@ -2358,7 +2357,6 @@ $('myTxtExpALLT').onclick = function(){
 		var d = $('myTrcSel2').value.split(" ")[1].split("_")
 		var w = 0; //=  //あとでWから取得するように
 		var l = 0; //=  //あとでlから取得するように
-		var l2 = [];
 
 		var p;//ループ用
 		var q;//ループ用
@@ -2376,11 +2374,7 @@ $('myTxtExpALLT').onclick = function(){
 			if (d[i].slice(0, 1) == "W") {
 				w = d[i].slice(1) * 12;
 			} else if (d[i].slice(0, 1) == "L") {
-				if(!d[i].includes(":")) d[i] += (":"+d[i].slice(1));
-				for(var s=0; s<parseInt(d[i].slice(1).split(":")[1]); s++){
-					l2.push(d[i].slice(1).split(":")[0]);
-				}
-				l = l2[parseInt($('myTrcSel2').value.split(" ")[0])-1];
+				l = d[i].slice(1);
 			} else if (d[i].slice(0, 1) == "C") {
 				//
 			}
@@ -2552,7 +2546,7 @@ $('myTxtExpALLT').onclick = function(){
 				w = nn[0]*12/(f*t)
 				v += d[i] + " ";
 			} else if (d[i].slice(0, 1) == "L") {
-				l = l2[parseInt($('myTrcSel2').value.split(" ")[0])-1];
+				l = d[i].slice(1);
 				v += d[i] + " ";
 			} else if (d[i].slice(0, 1) == "C") {
 				//
@@ -2940,7 +2934,6 @@ $('myTxtExpTokomeOne').onclick = function(Tmode){
 	var d = $('myTrcSel2').value.split(" ")[1].split("_")
 	var w = 0; //=  //あとでWから取得するように
 	var l = 0; //=  //あとでlから取得するように
-	var l2 = [];
 	var e;//計算用
 	var f;
 	var n = [];//長さ、左空白幅格納配列
@@ -2974,11 +2967,7 @@ $('myTxtExpTokomeOne').onclick = function(Tmode){
 			w = d[i].slice(1) * 12;
 			v += d[i] + " ";
 		} else if (d[i].slice(0, 1) == "L") {
-			if(!d[i].includes(":")) d[i] += (":"+d[i].slice(1));
-			for(var s=0; s<parseInt(d[i].slice(1).split(":")[1]); s++){
-				l2.push(d[i].slice(1).split(":")[0]);
-			}
-			l = l2[parseInt($('myTrcSel2').value.split(" ")[0])-1];
+			l = d[i].slice(1);
 			v += d[i] + " ";
 		} else if (d[i].slice(0, 1) == "C") {
 			v += d[i] + " ";
@@ -3405,7 +3394,6 @@ $('myTxtExpTokomeT').onclick = function(){
 		var d = $('myTrcSel2').value.split(" ")[1].split("_")
 		var w = 0; //=  //あとでWから取得するように
 		var l = 0; //=  //あとでlから取得するように
-		var l2 = [];
 
 		var p;//ループ用
 		var q;//ループ用
@@ -3423,11 +3411,7 @@ $('myTxtExpTokomeT').onclick = function(){
 			if (d[i].slice(0, 1) == "W") {
 				w = d[i].slice(1) * 12;
 			} else if (d[i].slice(0, 1) == "L") {
-				if(!d[i].includes(":")) d[i] += (":"+d[i].slice(1));
-				for(var s=0; s<parseInt(d[i].slice(1).split(":")[1]); s++){
-					l2.push(d[i].slice(1).split(":")[0]);
-				}
-				l = l2[parseInt($('myTrcSel2').value.split(" ")[0])-1];
+				l = d[i].slice(1);
 			} else if (d[i].slice(0, 1) == "C") {
 				//
 			}
@@ -3599,7 +3583,7 @@ $('myTxtExpTokomeT').onclick = function(){
 				w = nn[0]*12/(f*t)
 				v += d[i] + " ";
 			} else if (d[i].slice(0, 1) == "L") {
-				l = l2[parseInt($('myTrcSel2').value.split(" ")[0])-1];
+				l = d[i].slice(1);
 				v += d[i] + " ";
 			} else if (d[i].slice(0, 1) == "C") {
 				//
