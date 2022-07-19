@@ -1,0 +1,54 @@
+name: release
+
+on:
+  push:
+    branches: [ "autoReleaseTestBranch" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: npm install, build, and test
+      run: |
+        ls
+        npm i
+        npm install typescript
+        npm run build
+    - name: Zip output
+      run: |
+        zip -r test.zip dist
+        
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        body: |
+          Release note here
+        draft: true
+        prerelease: false
+        
+    - name: Upload Release Artifact
+      id: upload_artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ github.workspace }}/test.zip
+        asset_name: test.zip
+        asset_content_type: application/zip
