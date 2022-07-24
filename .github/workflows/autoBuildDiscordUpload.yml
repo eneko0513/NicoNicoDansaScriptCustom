@@ -25,6 +25,8 @@ jobs:
         npm run build
     - name: Zip output
       run: |
+        cp -f README.md dist
+        cp -f README.forDev.md dist
         zip -r ${GITHUB_REF##*/}.zip dist
     - name: UploadZip
       run: | 
