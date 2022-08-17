@@ -20,7 +20,7 @@ const LayerEditor = () => {
   const { layerData, setLayerData } = useContext(layerContext);
   if (!layerData || !setLayerData) return <></>;
 
-  let color = layerData.reduce(
+  const color = layerData.reduce(
     (pv, layer) =>
       layer.selected
         ? pv === ""

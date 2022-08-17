@@ -20,8 +20,7 @@
       & > :not(:last-child) {
         border-right: solid #bbbbbb 1px;
       }
-      .visible,
-      .delete {
+      .icon {
         width: 24px;
         padding: 4px;
       }

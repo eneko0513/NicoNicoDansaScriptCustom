@@ -15,6 +15,9 @@ const getElements = async (count = 0): Promise<contextTypeNullable> => {
     commentInputTextarea = document.getElementsByClassName(
       "CommentInput-textarea"
     )[0] as HTMLTextAreaElement,
+    videoSymbolContainerCanvas = document.getElementsByClassName(
+      "VideoSymbolContainer-canvas"
+    )[0] as HTMLCanvasElement,
     HeaderElement = document.getElementById(
       "dansk:HeaderElement"
     ) as HTMLDivElement,
@@ -26,8 +29,11 @@ const getElements = async (count = 0): Promise<contextTypeNullable> => {
     ) as HTMLDivElement,
     LayerElement = document.getElementById(
       "dansk:LayerElement"
+    ) as HTMLDivElement,
+    MemoElement = document.getElementById(
+      "dansk:MemoElement"
     ) as HTMLDivElement;
-  if (!(videoElement && commentCommandInput)) {
+  if (!(videoElement && commentCommandInput && videoSymbolContainerCanvas)) {
     //1分超えたらfail
     if (count > 120) {
       throw new Error("fail to get mount point");
@@ -39,10 +45,12 @@ const getElements = async (count = 0): Promise<contextTypeNullable> => {
     videoElement,
     commentCommandInput,
     commentInputTextarea,
+    videoSymbolContainerCanvas,
     HeaderElement,
     MainElement,
     FooterElement,
     LayerElement,
+    MemoElement,
   };
 };
 export default getElements;

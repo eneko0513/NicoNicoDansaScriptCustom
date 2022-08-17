@@ -1,8 +1,8 @@
-{
+﻿{
   "name": "DanSukuMizu",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "manifest_version": 2,
-  "description": "Created By @Negima1072 and @eneko0513 and @xpadev-net",
+  "description": "Created By @Negima1072, @eneko0513 and @xpadev-net",
   "content_scripts": [
 	{
     "matches": ["https://www.nicovideo.jp/watch/*"],
@@ -15,5 +15,10 @@
 	"16": "icon/icon16.png",
 	"32": "icon/icon32.png",
 	"64": "icon/icon64.png"
+  },
+  "browser_action": {
+	"default_icon": "icon/icon32.png",
+	"default_title": "DanSukuMizu",
+	"default_popup": "popup/popup.html"
   }
 }

@@ -3,6 +3,10 @@ import Styles from "./layerManager.module.scss";
 import replaceCharList from "@/libraries/layerManager.replaceCharList";
 import caretUtil from "@/libraries/caretUtil";
 import typeGuard from "@/libraries/typeGuard";
+
+const ua = window.navigator.userAgent,
+  isChromium = !!ua.match(/Chrome/),
+  isFirefox = !!ua.match(/Firefox/);
 /**
  * レイヤーとイベントハンドラの管理
  * @param data {layer}
@@ -16,26 +20,26 @@ const layerManager = (
   targetElement: HTMLDivElement,
   replaceMode: boolean
 ) => {
-  const ua = window.navigator.userAgent,
-    isChromium = ua.match(/Chrome/),
-    isFirefox = ua.match(/Firefox/);
   /**
    * 変更の際に勝手に生えたdivを消したり消えたdivを生やしたり
    * 変更があった際はコールバック(onChange)を呼ぶ
    */
   const update = (): void => {
-    if (isChromium) {
-      for (const element of Array.from(targetElement.children)) {
-        if (element.children.length === 0) continue;
-        if (element.children[0]?.tagName === "BR") {
-          element.children[0].remove();
-        }
+    for (const element of Array.from(targetElement.children)) {
+      if (element.children.length === 0) continue;
+      if (element.children[0]?.tagName === "BR" && isChromium) {
+        element.children[0].remove();
+      }
+      for (const child of Array.from(element.childNodes)) {
+        if (!child.nodeName.match(/#text|BR/)) child.remove();
       }
     }
-    const focusedNoe = caretUtil.getFocusedNode(),
-      focusedText = focusedNoe?.textContent,
-      caretPos = focusedNoe ? caretUtil.get(focusedNoe) : undefined;
-    const { strings, empty } = getInnerText(targetElement, data.height);
+    const caretPos = caretUtil.get(targetElement),
+      focusedNode = caretUtil.getFocusedNode(),
+      focusedPos = focusedNode ? caretUtil.get(focusedNode) : -1;
+    const init = !targetElement.classList.contains("dansk:LayerItemElement");
+    if (init) targetElement.classList.add("dansk:LayerItemElement");
+    const strings = getInnerText(targetElement, data.height);
     adjustChildren(targetElement, data.height);
     const groupElements = Array.from(
       targetElement.children
@@ -65,31 +69,25 @@ const layerManager = (
         if (itemElement.innerHTML === "") {
           itemElement.innerHTML = "<br>";
         }
-        if (itemElement.innerText !== `${strings[index]}\n` && isFirefox) {
-          itemElement.innerText = `${strings[index]}\n`;
-          if (empty) caretUtil.set(itemElement, strings[index]?.length || 0);
-        } else if (
-          itemElement.innerText !== `${strings[index]}` &&
-          isChromium
+        if (
+          itemElement.innerText !== `${strings[index]}${isFirefox ? "\n" : ""}`
         ) {
-          itemElement.innerText = `${strings[index]}`;
-          if (empty) caretUtil.set(itemElement, strings[index]?.length || 0);
+          itemElement.innerText = `${strings[index]}${isFirefox ? "\n" : ""}`;
         }
         if (strings[index]?.match(/[\u00A0\u0020]/)) {
           itemElement.style.background = "rgba(255,0,0,0.3)";
         } else {
           if (item !== strings[index]) {
-            group.content[itemIndex] = strings[index] as string;
+            if (init) {
+              itemElement.innerText = `${group.content[itemIndex]}${
+                isFirefox ? "\n" : ""
+              }`;
+            } else {
+              group.content[itemIndex] = strings[index] as string;
+            }
             isChanged = true;
           }
           itemElement.style.background = "none";
-        }
-
-        if (
-          itemElement.innerText === `${focusedText}${isFirefox ? "\n" : ""}` &&
-          caretPos
-        ) {
-          caretUtil.set(itemElement, caretPos);
         }
 
         index++;
@@ -97,12 +95,43 @@ const layerManager = (
     });
     if (isChanged) {
       onChange(data);
+      let offset = 0;
+      for (const element of Array.from(
+        targetElement.children
+      ) as HTMLDivElement[]) {
+        if (caretPos === undefined) break;
+        const length = element.innerText.length + (isFirefox ? -1 : 0);
+        if (offset + length < caretPos) {
+          offset += length;
+        } else if (
+          element.innerText ===
+            `${focusedNode?.textContent}${isFirefox ? "\n" : ""}` &&
+          caretPos - offset === focusedPos
+        ) {
+          caretUtil.set(element, caretPos - offset);
+          break;
+        } else {
+          offset += length;
+        }
+      }
     }
     if (window.getSelection()?.anchorNode === targetElement) {
       (targetElement.firstElementChild as HTMLDivElement).focus();
       document.getSelection()?.collapse(targetElement.firstElementChild, 0);
     }
     return;
+  };
+  //引用元: https://zenn.dev/takky94/articles/36656269da7c33
+  targetElement.onpaste = (e: ClipboardEvent) => {
+    if (!e.clipboardData) return;
+    const text = e.clipboardData.getData("text/plain");
+    const selection = window.getSelection();
+    if (!selection || !selection.rangeCount) return;
+    selection.deleteFromDocument();
+    selection.getRangeAt(0).insertNode(document.createTextNode(text));
+    selection.getRangeAt(0).collapse();
+    e.preventDefault();
+    update();
   };
   update();
   targetElement.oninput = update;
@@ -182,14 +211,12 @@ const adjustChildren = (targetElement: HTMLDivElement, length: number) => {
 const getInnerText = (
   targetElement: HTMLDivElement,
   length: number
-): { strings: string[]; empty: boolean } => {
+): string[] => {
   const strings: string[] = [];
-  let empty = false;
-  if (targetElement.children.length === 0) {
+  if (targetElement.childNodes[isFirefox ? 0 : 1]?.nodeName === "#text") {
     strings.push(
       ...targetElement.innerText.replace(/\n$/, "").split(/\r\n|\r|\n/)
     );
-    empty = true;
   } else {
     for (const itemElement of Array.from(
       targetElement.children
@@ -206,6 +233,6 @@ const getInnerText = (
     strings[length - 1] = strings.slice(length - 1).join("");
     strings.splice(length);
   }
-  return { strings, empty };
+  return strings;
 };
 export default layerManager;

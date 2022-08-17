@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Popup from "@/components/popup/Popup";
 import BackgroundImageDisplay from "@/components/backgroundPicker/BackgroundImageDisplay";
 import { layerContext } from "@/components/LayerContext";
@@ -15,7 +21,26 @@ import Styles from "./BackgroundPicker.module.scss";
 const BackgroundPicker = () => {
   const { optionData, setOptionData } = useContext(layerContext);
   const [urlInputActive, setUrlInputActive] = useState<boolean>(false),
-    [urlInputValue, setUrlInputValue] = useState<string>("");
+    [urlInputValue, setUrlInputValue] = useState<string>(""),
+    colorInput = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (!colorInput.current) return;
+    colorInput.current.onchange = (e) => {
+      const color = (e.target as HTMLInputElement)?.value,
+        canvas = document.createElement("canvas"),
+        context = canvas.getContext("2d");
+      if (!context || !optionData || !setOptionData) return;
+      canvas.width = 1920;
+      canvas.height = 1080;
+      context.fillStyle = color;
+      context.fillRect(0, 0, 1920, 1080);
+      canvas.toBlob((blob) => {
+        if (!blob) return;
+        optionData.bgImages.push(URL.createObjectURL(blob));
+        setOptionData({ ...optionData });
+      });
+    };
+  }, [colorInput]);
   if (!optionData || !setOptionData) return <></>;
   const loadFromFile = () => {
       const input = document.createElement("input");
@@ -42,7 +67,11 @@ const BackgroundPicker = () => {
         setUrlInputValue("");
         setUrlInputActive(false);
       }
+    },
+    addColorBackground = () => {
+      colorInput.current?.click();
     };
+
   const drawModeOnChange = useCallback(
     (value: string) => {
       optionData.bgMode = value as objectFitArgs;
@@ -63,6 +92,8 @@ const BackgroundPicker = () => {
             click={() => setUrlInputActive(true)}
             text={"画像をURLから読み込む"}
           />
+          <Button click={addColorBackground} text={"単色背景を追加"} />
+          <input type="color" className={Styles.color} ref={colorInput} />
         </div>
         <div>
           表示モード：

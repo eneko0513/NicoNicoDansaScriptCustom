@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useState } from "react";
 import Styles from "./Dropdown.module.scss";
 
-type dropdownPorps = {
+type dropdownProps = {
   change: (arg0: string) => void;
   value: { text: string; value: string }[];
   selected: string;
@@ -18,7 +18,7 @@ type dropdownPorps = {
  * @param props
  * @constructor
  */
-const Dropdown = (props: dropdownPorps) => {
+const Dropdown = (props: dropdownProps) => {
   const [value, setValue] = useState<string>(props.selected);
   const onSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setValue(e.target.value);

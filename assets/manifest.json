@@ -1,8 +1,8 @@
 ﻿{
   "name": "DanSukuMizu",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "manifest_version": 3,
-  "description": "Created By @Negima1072 and @eneko0513 and @xpadev-net",
+  "description": "Created By @Negima1072, @eneko0513 and @xpadev-net",
   "content_scripts": [
     {
       "matches": ["https://www.nicovideo.jp/watch/*"],
@@ -30,9 +30,5 @@
     "default_icon": "icon/icon16.png",
     "default_title": "だんスク",
     "default_popup": "popup/popup.html"
-  },
-  "options_ui": {
-    "page": "options/options.html",
-    "open_in_tab": false
   }
 }

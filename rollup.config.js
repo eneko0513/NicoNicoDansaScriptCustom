@@ -56,13 +56,4 @@ export default [
 			name: 'DanSukuMizu'
 		},
 		plugins: plugins
-	},
-	{
-		input: 'src/options/options.ts',
-		output: {
-			file: `dist/options/options.js`,
-			format: 'umd',
-			name: 'DanSukuMizu'
-		},
-		plugins: plugins
 	}]

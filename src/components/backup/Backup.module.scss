@@ -1,0 +1,11 @@
+.wrapper {
+  min-width: 400px;
+  min-height: 200px;
+  max-height: 75vh;
+  overflow-y: scroll;
+}
+.block {
+  border: solid 1px black;
+  padding: 10px;
+  margin: 5px;
+}

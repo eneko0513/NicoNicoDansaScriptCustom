@@ -40,6 +40,8 @@
     }
     .container {
       padding: 5px;
+      max-height: 750px;
+      overflow: auto;
     }
   }
 }

@@ -83,7 +83,6 @@ window.addEventListener("load", () => {
   };
   const ev = {
     down(e: MouseEvent) {
-      console.log(e);
       const target = e.target as HTMLLIElement;
       const pageX = e.pageX;
       const pageY = e.pageY;
@@ -149,41 +148,41 @@ window.addEventListener("load", () => {
     );
     const commandOrder: (string | null)[] = [];
     commList.forEach((v) => commandOrder.push(v.getAttribute("value")));
-    localStorage.set("option_commandOrder", commandOrder.join("|"));
+    localStorage.set("options_commandOrder", commandOrder.join("|"));
     const caInputElm = document.getElementById(
       "additional-command-ca"
     ) as HTMLInputElement;
-    localStorage.set("option_useCA", String(caInputElm.checked));
+    localStorage.set("options_useCA", String(caInputElm.checked));
     const patInputElm = document.getElementById(
       "additional-command-pat"
     ) as HTMLInputElement;
-    localStorage.set("option_usePat", String(patInputElm.checked));
+    localStorage.set("options_usePat", String(patInputElm.checked));
     const orgInputElm = document.getElementById(
       "additional-command-original"
     ) as HTMLInputElement;
-    localStorage.set("option_useOriginal", String(orgInputElm.checked));
+    localStorage.set("options_useOriginal", String(orgInputElm.checked));
     const orgTextInputElm = document.getElementById(
       "additional-command-original-text"
     ) as HTMLInputElement;
     if (orgTextInputElm.value == "" && orgInputElm.checked)
       throw new Error("独自テキストが空です");
-    localStorage.set("option_originalText", orgTextInputElm.value);
+    localStorage.set("options_useOriginal_text", orgTextInputElm.value);
     const mainSpanInputElm = document.getElementById(
       "main-comment-span-ms"
     ) as HTMLInputElement;
-    localStorage.set("option_timespanMain", mainSpanInputElm.value);
+    localStorage.set("options_timespan_main", mainSpanInputElm.value);
     const ownerSpanInputElm = document.getElementById(
       "owner-comment-span-ms"
     ) as HTMLInputElement;
-    localStorage.set("option_timespanOwner", ownerSpanInputElm.value);
+    localStorage.set("options_timespan_owner", ownerSpanInputElm.value);
     const tmtagElm = document.getElementById(
       "tmtag-use-10ms-base"
     ) as HTMLInputElement;
-    localStorage.set("option_10msBase", String(tmtagElm.checked));
+    localStorage.set("options_useMs", String(tmtagElm.checked));
     const rep01Elm = document.getElementById(
       "rep-color-010101"
     ) as HTMLInputElement;
-    localStorage.set("option_repColor01", String(rep01Elm.checked));
+    localStorage.set("options_lineMode", String(rep01Elm.checked));
   };
 
   const commJap = (value: string): string => {
@@ -215,7 +214,7 @@ window.addEventListener("load", () => {
     const dd = document.getElementById("command-order-ui") as HTMLUListElement;
     dd.innerHTML = "";
     (
-      localStorage.get("option_commandOrder") ??
+      localStorage.get("options_commandOrder") ??
       "ca|patissier|size|position|color|font|ender|full|original"
     )
       .split("|")
@@ -230,45 +229,45 @@ window.addEventListener("load", () => {
     const caInputElm = document.getElementById(
       "additional-command-ca"
     ) as HTMLInputElement;
-    caInputElm.checked = (localStorage.get("option_useCA") ?? "true") == "true";
+    caInputElm.checked =
+      (localStorage.get("options_useCA") ?? "true") == "true";
     const patInputElm = document.getElementById(
       "additional-command-pat"
     ) as HTMLInputElement;
     patInputElm.checked =
-      (localStorage.get("option_usePat") ?? "false") == "true";
+      (localStorage.get("options_usePat") ?? "false") == "true";
     const orgInputElm = document.getElementById(
       "additional-command-original"
     ) as HTMLInputElement;
     orgInputElm.checked =
-      (localStorage.get("option_useOriginal") ?? "false") == "true";
+      (localStorage.get("options_useOriginal") ?? "false") == "true";
     const orgTextInputElm = document.getElementById(
       "additional-command-original-text"
     ) as HTMLInputElement;
     orgTextInputElm.value = String(
-      localStorage.get("option_originalText") ?? ""
+      localStorage.get("options_useOriginal_text") ?? ""
     );
     const mainSpanInputElm = document.getElementById(
       "main-comment-span-ms"
     ) as HTMLInputElement;
     mainSpanInputElm.value = String(
-      localStorage.get("option_timespanMain") ?? 6000
+      localStorage.get("options_timespan_main") ?? 6000
     );
     const ownerSpanInputElm = document.getElementById(
       "owner-comment-span-ms"
     ) as HTMLInputElement;
     ownerSpanInputElm.value = String(
-      localStorage.get("option_timespanOwner") ?? 1000
+      localStorage.get("options_timespan_owner") ?? 1000
     );
     const tmtagElm = document.getElementById(
       "tmtag-use-10ms-base"
     ) as HTMLInputElement;
-    tmtagElm.checked =
-      (localStorage.get("option_10msBase") ?? "false") == "true";
+    tmtagElm.checked = (localStorage.get("options_useMs") ?? "false") == "true";
     const rep01Elm = document.getElementById(
       "rep-color-010101"
     ) as HTMLInputElement;
     rep01Elm.checked =
-      (localStorage.get("option_repColor01") ?? "false") == "true";
+      (localStorage.get("options_lineMode") ?? "false") == "true";
   };
 
   saveBtn.onclick = () => {

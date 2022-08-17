@@ -1,0 +1,12 @@
+.wrapper {
+  width: 400px;
+  .bool,
+  .string,
+  .number {
+    padding: 5px 10px;
+  }
+  input[type="text"],
+  input[type="number"] {
+    width: 100%;
+  }
+}

@@ -6,6 +6,7 @@ import {
   layerTemplate,
   MonoChar,
 } from "@/@types/types";
+import localStorage from "./localStorage";
 import Templates from "@/headers/Trace.templates";
 import CharList from "./layerUtil.charList";
 import typeGuard from "@/libraries/typeGuard";
@@ -71,8 +72,8 @@ const layerUtil = {
     }
     return aStr.join("") === bStr.join("");
   },
-  parse: (input: string): layer[] | undefined => {
-    console.log(input);
+  parse: (): layer[] | undefined => {
+    //todo:parse用意？
     return [];
   },
   /**
@@ -167,18 +168,62 @@ const layerUtil = {
       if (!string) return;
       if (layer.pos === "shita") string.reverse();
       result.push({
-        command: `[${[
-          ...layer.commands,
+        command: command2str(
+          [...layer.commands],
           layer.color,
           layer.pos,
-          layer.font,
-          "ca",
-        ].join(" ")}]`,
+          layer.font
+        ),
         content: string,
       });
     }
     return result;
   },
+};
+
+/**
+ * コマンドの作成
+ * @param commands
+ * @param color
+ * @param pos
+ * @param font
+ */
+const command2str = (
+  commands: string[],
+  color: string,
+  pos: string,
+  font: string
+) => {
+  if (localStorage.get("options_useCA") === "true") commands.push("ca");
+  if (localStorage.get("options_usePat") === "true") commands.push("patissier");
+  if (localStorage.get("options_useOriginal") === "true")
+    commands.push("original");
+  commands.push("position");
+  commands.push("font");
+  commands.push("color");
+  const commandsOrder = localStorage.get("options_commandOrder").split("|");
+  const getIndex = (input: string): number => {
+    if (input.match(/big|small|medium/)) return commandsOrder.indexOf("size");
+    const index = commandsOrder.indexOf(input);
+    if (index === -1) return commandsOrder.indexOf("original");
+    return index;
+  };
+  commands.sort((a, b) => {
+    const a_ = getIndex(a),
+      b_ = getIndex(b);
+    if (a_ < b_) return -1;
+    if (a_ > b_) return 1;
+    return 0;
+  });
+  if (color == "#000000" && localStorage.get("options_lineMode") === "true") {
+    color = "#010101";
+  }
+  return `[${commands
+    .join(" ")
+    .replace(/position/g, pos)
+    .replace(/font/g, font)
+    .replace(/color/g, color)
+    .replace(/original/g, localStorage.get("options_useOriginal_text"))}]`;
 };
 
 /**

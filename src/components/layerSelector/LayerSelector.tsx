@@ -1,10 +1,12 @@
-import React, { ChangeEvent, useContext, useState } from "react";
+import React, { ChangeEvent, useCallback, useContext, useState } from "react";
 import Styles from "./LayerSelector.module.scss";
 import { ReactSortable } from "react-sortablejs";
 import layerUtil from "@/libraries/layerUtil";
 import icons from "@/assets/icons";
 import { layerContext } from "@/components/LayerContext";
 import styled from "styled-components";
+import CssEditor from "@/components/layerSelector/CssEditor";
+import { layer } from "@/@types/types";
 
 type colorProps = {
   bgColor: string;
@@ -21,7 +23,8 @@ const ColorDisplay = styled.label<colorProps>`
 const LayerSelector = () => {
   const { layerData, setLayerData } = useContext(layerContext),
     [editingLayer, setEditingLayer] = useState<number>(-1),
-    [editingLayerName, setEditingLayerName] = useState<string>("");
+    [editingLayerName, setEditingLayerName] = useState<string>(""),
+    [isSetting, setSetting] = useState<number>(-1);
   if (!layerData || !setLayerData) return <></>;
   const onColorChange = (event: ChangeEvent<HTMLInputElement>, key: number) => {
       const layer = layerData[key];
@@ -75,6 +78,14 @@ const LayerSelector = () => {
       }
       setLayerData([...layerData]);
     },
+    closeCssEditor = useCallback(
+      (data: layer) => {
+        layerData[isSetting] = data;
+        setLayerData([...layerData]);
+        setSetting(-1);
+      },
+      [isSetting]
+    ),
     remove = (key: number) => {
       if (!confirm(`削除してよろしいですか？`)) return;
       const layer = layerData,
@@ -110,7 +121,7 @@ const LayerSelector = () => {
               key={`${item.text}${key}`}
             >
               <td className={Styles.id}>{key + 1}</td>
-              <td className={Styles.visible} onClick={() => toggleVisible(key)}>
+              <td className={Styles.icon} onClick={() => toggleVisible(key)}>
                 {item.visible ? icons.eye : icons.eyeClosed}
               </td>
               <td className={Styles.color}>
@@ -152,13 +163,19 @@ const LayerSelector = () => {
               <td className={Styles.font} onClick={() => toggleFont(key)}>
                 {item.font}
               </td>
-              <td className={Styles.delete} onClick={() => remove(key)}>
+              <td className={Styles.icon} onClick={() => setSetting(key)}>
+                {icons.gear}
+              </td>
+              <td className={Styles.icon} onClick={() => remove(key)}>
                 {icons.delete}
               </td>
             </tr>
           ))}
         </ReactSortable>
       </table>
+      {layerData[isSetting] && (
+        <CssEditor close={closeCssEditor} data={layerData[isSetting]} />
+      )}
     </div>
   );
 };

@@ -64,9 +64,12 @@ const Layer = (props: LayerProps): JSX.Element => {
   }, [layerElement, layerData, props.data, optionData?.replace]);
   return (
     <>
-      {optionData?.grid && props.data.selected && grids[props.data.value] && (
-        <img src={grids[props.data.value]} alt={""} />
-      )}
+      {optionData?.grid &&
+        props.data.selected &&
+        props.data.visible &&
+        grids[props.data.value] && (
+          <img src={grids[props.data.value]} alt={""} />
+        )}
       <LayerBox
         className={`${Styles.layer} ${Styles[props.data.font]} ${
           props.data.selected ? Styles.active : ""
@@ -82,7 +85,7 @@ const Layer = (props: LayerProps): JSX.Element => {
         ref={layerElement}
         spellCheck={"false"}
       />
-      {props.data.selected && (
+      {props.data.selected && props.data.visible && (
         <LayerBox
           className={Styles.outline}
           top={props.data.top[props.data.pos]}
