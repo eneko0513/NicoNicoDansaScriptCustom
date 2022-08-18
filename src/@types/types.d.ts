@@ -12,6 +12,7 @@ type contextTypeNullable = {
   videoSymbolContainerCanvas?: HTMLCanvasElement;
   HeaderElement?: HTMLDivElement;
   MainElement?: HTMLDivElement;
+  BackgroundImageElement?: HTMLDivElement;
   FooterElement?: HTMLDivElement;
   LayerElement?: HTMLDivElement;
   MemoElement?: HTMLDivElement;
@@ -24,6 +25,7 @@ type contextType = {
   commentInputTextarea: HTMLTextAreaElement;
   HeaderElement: HTMLDivElement;
   MainElement: HTMLDivElement;
+  BackgroundImageElement: HTMLDivElement;
   FooterElement: HTMLDivElement;
   LayerElement: HTMLDivElement;
   MemoElement: HTMLDivElement;
@@ -103,6 +105,7 @@ type layer = layerTemplate & {
   selected: boolean;
   color: string;
   content: layerLine[];
+  overwrite?: boolean;
 };
 
 type autoSave = {
@@ -187,5 +190,8 @@ type nvPlayerApi = {
 declare global {
   interface Window {
     __videoplayer: nvPlayerApi;
+  }
+  interface Event {
+    isComposing: boolean;
   }
 }

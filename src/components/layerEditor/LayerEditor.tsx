@@ -34,41 +34,41 @@ const LayerEditor = () => {
   const changePos = useCallback(
       (target: string) => {
         if (!typeGuard.trace.commentPos(target)) return;
-        setLayerData([
-          ...layerData.map((value) => {
+        setLayerData(
+          layerData.map((value) => {
             if (value.selected && value.posList.includes(target)) {
               value.pos = target;
             }
             return value;
-          }),
-        ]);
+          })
+        );
       },
       [layerData]
     ),
     changeFont = useCallback(
       (target: string) => {
         if (!typeGuard.trace.commentFont(target)) return;
-        setLayerData([
-          ...layerData.map((value) => {
+        setLayerData(
+          layerData.map((value) => {
             if (value.selected) {
               value.font = target;
             }
             return value;
-          }),
-        ]);
+          })
+        );
       },
       [layerData]
     ),
     changeColor = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
-        setLayerData([
-          ...layerData.map((value) => {
+        setLayerData(
+          layerData.map((value) => {
             if (value.selected) {
               value.color = e.target.value;
             }
             return value;
-          }),
-        ]);
+          })
+        );
       },
       [layerData]
     ),

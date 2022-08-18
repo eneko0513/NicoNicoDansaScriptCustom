@@ -24,6 +24,9 @@ const getElements = async (count = 0): Promise<contextTypeNullable> => {
     MainElement = document.getElementById(
       "dansk:MainElement"
     ) as HTMLDivElement,
+    BackgroundImageElement = document.getElementById(
+      "dansk:BackgroundImageElement"
+    ) as HTMLDivElement,
     FooterElement = document.getElementById(
       "dansk:FooterElement"
     ) as HTMLDivElement,
@@ -33,7 +36,14 @@ const getElements = async (count = 0): Promise<contextTypeNullable> => {
     MemoElement = document.getElementById(
       "dansk:MemoElement"
     ) as HTMLDivElement;
-  if (!(videoElement && commentCommandInput && videoSymbolContainerCanvas)) {
+  if (
+    !(
+      videoElement &&
+      commentCommandInput &&
+      videoSymbolContainerCanvas &&
+      BackgroundImageElement
+    )
+  ) {
     //1分超えたらfail
     if (count > 120) {
       throw new Error("fail to get mount point");
@@ -48,6 +58,7 @@ const getElements = async (count = 0): Promise<contextTypeNullable> => {
     videoSymbolContainerCanvas,
     HeaderElement,
     MainElement,
+    BackgroundImageElement,
     FooterElement,
     LayerElement,
     MemoElement,

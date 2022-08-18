@@ -5,6 +5,7 @@ import Layer from "@/components/layer/Layer";
 import Styles from "./LayerContainer.module.scss";
 import { objectFitArgs } from "@/@types/types";
 import { context } from "@/components/Context";
+import ReactDOM from "react-dom";
 
 const LayerScale = styled.div<{ scaleX: number; scaleY: number }>`
   transform: scale(${(props) => props.scaleX}, ${(props) => props.scaleY});
@@ -28,7 +29,8 @@ function beforeUnload(e: BeforeUnloadEvent) {
  */
 const LayerContainer = (): JSX.Element => {
   const { layerData, optionData } = useContext(layerContext);
-  const { videoSymbolContainerCanvas } = useContext(context);
+  const { videoSymbolContainerCanvas, BackgroundImageElement } =
+    useContext(context);
   useEffect(() => {
     const classList = videoSymbolContainerCanvas?.parentElement?.classList,
       cssClass = Styles.VideoSymbolContainer || "_";
@@ -72,16 +74,20 @@ const LayerContainer = (): JSX.Element => {
   useEffect(() => observerCallback(), [document.body.classList]);
   return (
     <>
-      {optionData && optionData?.bgActive > -1 && optionData.bgVisible ? (
-        <BackgroundImage
-          className={`${Styles.backgroundImage}`}
-          src={optionData.bgImages[optionData.bgActive]}
-          alt={"backgroundImage"}
-          mode={optionData.bgMode}
-        />
-      ) : (
-        ""
-      )}
+      {optionData &&
+      optionData?.bgActive > -1 &&
+      optionData.bgVisible &&
+      BackgroundImageElement
+        ? ReactDOM.createPortal(
+            <BackgroundImage
+              className={`${Styles.backgroundImage}`}
+              src={optionData.bgImages[optionData.bgActive]}
+              alt={"backgroundImage"}
+              mode={optionData.bgMode}
+            />,
+            BackgroundImageElement
+          )
+        : ""}
       <LayerScale
         ref={targetNode}
         scaleX={scale.x}

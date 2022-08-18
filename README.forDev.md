@@ -37,3 +37,12 @@ JSONは型定義ができないので使用しない
 #### メディア
 メディアはsvgならJSXとして、画像ならblobとして`src/assets`にts/tsx形式で保存する  
 メインのコードはscriptタグで挿入しているため、拡張機能側の機能を触れないので注意
+
+### リリースの仕方
+1. mainブランチにPullRequestを出しマージする
+2. mainブランチ宛にバージョン名の変更,README.mdの変更をpushする。
+2. main->ReleaseでPullRequestを出しマージする
+3. Releaseブランチでmain->Releaseのマージコミット宛にバージョン名(vx.x.x)のタグをpushする
+4. Actionが実行される（自動）
+5. Discordの配布チャンネルでリリースノートを貼り付ける
+6. Twitterで告知を行う

@@ -4,7 +4,6 @@ import { layer } from "@/@types/types";
 import Styles from "./Layer.module.scss";
 import { layerContext } from "@/components/LayerContext";
 import layerManager from "@/libraries/layerManager";
-import layerUtil from "@/libraries/layerUtil";
 import grids from "@/assets/grids";
 
 type LayerProps = {
@@ -48,13 +47,7 @@ const Layer = (props: LayerProps): JSX.Element => {
     setLayerData([...layerData]);
   };
   useEffect(() => {
-    if (
-      !layerElement.current ||
-      (currentLayer.current !== undefined &&
-        layerUtil.isEqual(currentLayer.current, props.data)) ||
-      !optionData
-    )
-      return;
+    if (!layerElement.current || !optionData) return;
     layerManager(
       props.data,
       onchange,

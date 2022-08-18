@@ -44,13 +44,13 @@ const defaultValue: localStorageDefaultValues = {
     type: "string",
     required: "options_useOriginal",
   },
-  options_timespan_main: {
+  options_timespan_owner: {
     defaultValue: "1000",
     description: "投稿者コメントで投下時の間隔(ms)",
     dangerous: true,
     type: "number",
   },
-  options_timespan_owner: {
+  options_timespan_main: {
     defaultValue: "6000",
     description: "視聴者コメントで投下時の間隔(ms)",
     dangerous: true,

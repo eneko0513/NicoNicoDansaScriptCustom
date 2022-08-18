@@ -32,7 +32,7 @@ const OutputBox = (): JSX.Element => {
       return;
     setTextareaValue([...textareaValue, ...exportLayer]);
     setExportLayer([]);
-  }, [exportLayer]);
+  }, [exportLayer, textareaValue]);
   const getCommandAndComment = (
     stringArr: string[],
     isReverse: boolean
@@ -140,9 +140,13 @@ const OutputBox = (): JSX.Element => {
             /^https:\/\/www\.nicovideo\.jp\/watch\/[^/]+\/edit\/owner_comment/
           ),
           length = textareaValue.length;
+        const timeSpan = Number(
+          localStorage.get(
+            isOwnerMode ? "options_timespan_owner" : "options_timespan_main"
+          )
+        );
         setIsPosting(true);
         setSpoilerMessage("待機中");
-        await sleep(isOwnerMode ? 1000 : 6000);
         for (let i = 0; i < length; i++) {
           if (postAllCancel.current) {
             setIsPosting(false);
@@ -156,11 +160,7 @@ const OutputBox = (): JSX.Element => {
             setSpoilerMessage("コメントデータのパースに失敗しました");
             return;
           }
-          const timeSpan = Number(
-            localStorage.get(
-              isOwnerMode ? "options_timespan_owner" : "options_timespan_main"
-            )
-          );
+          await sleep(timeSpan);
           setSpoilerMessage(`セット中(${i + 1}/${length})`);
           if (setLine(content.command, content.comment)) {
             if (isReverse) {
@@ -168,7 +168,7 @@ const OutputBox = (): JSX.Element => {
             } else {
               textareaValue.shift();
             }
-            await sleep(timeSpan);
+            await sleep(200);
             commentInputTextarea.dispatchEvent(
               new KeyboardEvent("keydown", {
                 key: "Enter",
@@ -183,7 +183,6 @@ const OutputBox = (): JSX.Element => {
           } else {
             setSpoilerMessage(`セットに失敗しました(${i + 1}/${length})`);
           }
-          await sleep(timeSpan);
         }
         setIsPosting(false);
       };
@@ -202,6 +201,7 @@ const OutputBox = (): JSX.Element => {
             className={Styles.textarea}
             value={textareaValue.join("\n")}
             disabled={isPosting}
+            wrap="off"
             onChange={(e) =>
               setTextareaValue(e.target.value.split(/\r\n|\r|\n/))
             }
@@ -213,6 +213,11 @@ const OutputBox = (): JSX.Element => {
             text="逆から"
             click={toggleIsReverse}
             active={isReverse}
+          />
+          <Button
+            disabled={isPosting}
+            text="クリア"
+            click={() => setTextareaValue([])}
           />
           <Button
             disabled={isPosting}

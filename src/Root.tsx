@@ -37,6 +37,7 @@ const Root = (): JSX.Element => {
 const init = async () => {
   let mainContainer,
     mainContainerPlayer,
+    CommentRenderer,
     videoSymbolContainerCanvas: HTMLCanvasElement | undefined,
     videoContainer,
     mainContainerPlayerPanel,
@@ -51,6 +52,10 @@ const init = async () => {
     mainContainerPlayerPanel = mainContainer?.getElementsByClassName(
       "MainContainer-playerPanel"
     )[0] as HTMLDivElement;
+    if (mainContainer?.getElementsByClassName("CommentRenderer").length > 0)
+      CommentRenderer = mainContainer?.getElementsByClassName(
+        "CommentRenderer"
+      )[0] as HTMLDivElement;
     videoSymbolContainerCanvas = document.getElementsByClassName(
       "VideoSymbolContainer-canvas"
     )[0] as HTMLCanvasElement;
@@ -59,8 +64,10 @@ const init = async () => {
     )[0] as HTMLDivElement;
     count++;
     if (
+      mainContainer === undefined ||
       mainContainerPlayer === undefined ||
       mainContainerPlayerPanel === undefined ||
+      CommentRenderer === undefined ||
       videoSymbolContainerCanvas === undefined ||
       videoContainer === undefined
     ) {
@@ -73,6 +80,7 @@ const init = async () => {
     mainContainer === undefined ||
     mainContainerPlayer === undefined ||
     mainContainerPlayerPanel === undefined ||
+    CommentRenderer === undefined ||
     videoSymbolContainerCanvas === undefined ||
     videoContainer === undefined
   ) {
@@ -91,12 +99,18 @@ const init = async () => {
   mainContainerPlayer.appendChild(MainElement);
   const FooterElement = document.createElement("div");
   mainContainer.after(FooterElement);
+  const BackgroundImageElement = document.createElement("div");
+  CommentRenderer.insertBefore(
+    BackgroundImageElement,
+    CommentRenderer.firstChild
+  );
   const LayerElement = document.createElement("div");
   videoSymbolContainerCanvas.after(LayerElement);
   const MemoElement = document.createElement("div");
   mainContainerPlayerPanel.prepend(MemoElement);
   HeaderElement.id = "dansk:HeaderElement";
   MainElement.id = "dansk:MainElement";
+  BackgroundImageElement.id = "dansk:BackgroundImageElement";
   FooterElement.id = "dansk:FooterElement";
   LayerElement.id = "dansk:LayerElement";
   MemoElement.id = "dansk:MemoElement";
@@ -107,19 +121,5 @@ const init = async () => {
   const ReactRoot = createRoot(ReactRootElement);
   ReactRoot.render(<Root />);
   inject();
-  /*if (localStorage.get("options_commandOrder") == null) {
-    localStorage.set(
-      "options_commandOrder",
-      "ca|patissier|size|position|color|font|ender|full|original"
-    );
-    localStorage.set("option_useCA", "true");
-    localStorage.set("option_usePat", "false");
-    localStorage.set("option_useOriginal", "false");
-    localStorage.set("option_originalText", "");
-    localStorage.set("option_timespanMain", "6000");
-    localStorage.set("option_timespanOwner", "1000");
-    localStorage.set("option_10msBase", "false");
-    localStorage.set("option_repColor01", "false");
-  }*/
 };
 void init();

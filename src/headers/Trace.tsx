@@ -190,8 +190,12 @@ const Trace = () => {
         if (typeof e.target?.result !== "string") return;
         const data: unknown = JSON.parse(e.target.result);
         if (!typeGuard.layer.isLayers(data)) return;
-        setLayerData([]);
-        setTimeout(() => setLayerData(data), 1);
+        setLayerData(
+          data.map((layer) => {
+            layer.overwrite = true;
+            return layer;
+          })
+        );
       };
       input.click();
     }, []);

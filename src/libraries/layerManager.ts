@@ -24,21 +24,22 @@ const layerManager = (
    * 変更の際に勝手に生えたdivを消したり消えたdivを生やしたり
    * 変更があった際はコールバック(onChange)を呼ぶ
    */
-  const update = (): void => {
+  const update = (e?: Event): void => {
+    if (e?.isComposing === true) return;
     for (const element of Array.from(targetElement.children)) {
       if (element.children.length === 0) continue;
       if (element.children[0]?.tagName === "BR" && isChromium) {
         element.children[0].remove();
       }
       for (const child of Array.from(element.childNodes)) {
-        if (!child.nodeName.match(/#text|BR/)) child.remove();
+        if (!child.nodeName.match(/#text|BR|SPAN/)) {
+          child.remove();
+        }
       }
     }
     const caretPos = caretUtil.get(targetElement),
       focusedNode = caretUtil.getFocusedNode(),
       focusedPos = focusedNode ? caretUtil.get(focusedNode) : -1;
-    const init = !targetElement.classList.contains("dansk:LayerItemElement");
-    if (init) targetElement.classList.add("dansk:LayerItemElement");
     const strings = getInnerText(targetElement, data.height);
     adjustChildren(targetElement, data.height);
     const groupElements = Array.from(
@@ -78,7 +79,7 @@ const layerManager = (
           itemElement.style.background = "rgba(255,0,0,0.3)";
         } else {
           if (item !== strings[index]) {
-            if (init) {
+            if (data.overwrite) {
               itemElement.innerText = `${group.content[itemIndex]}${
                 isFirefox ? "\n" : ""
               }`;
@@ -93,7 +94,10 @@ const layerManager = (
         index++;
       });
     });
-    if (isChanged) {
+    if (data.overwrite) {
+      data.overwrite = false;
+      onChange(data);
+    } else if (isChanged) {
       onChange(data);
       let offset = 0;
       for (const element of Array.from(

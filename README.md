@@ -19,6 +19,16 @@ Created By @Negima1072, @eneko0513 and @xpadev-net
 [デバッガー](about:debugging#/runtime/this-firefox)を開き、「一時的なアドオンを読み込む」から、先程リネームしたmanifest.jsonを選択します  
 
 ## 変更点
+### v1.0.3
+#### 変更
+- レイヤー編集関連のバグ修正
+- 背景画像のレイヤー順をニコ動コメント描写レイヤーよりも下へ
+- いくつかのテンプレのCSS値を適正化
+- OutputBoxをwrapしないように変更
+
+#### 追加
+- OutputBoxにクリアボタンを追加
+
 ### v1.0.2
 #### 変更
 - 背景画像に単色背景を設定できるよう修正
