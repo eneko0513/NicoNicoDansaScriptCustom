@@ -29,7 +29,7 @@ const caretUtil = {
     const range = originalRange.cloneRange();
     range.selectNodeContents(targetElement);
     range.setEnd(originalRange.endContainer, originalRange.endOffset);
-    return range.toString().length;
+    return range.toString().replace(/\r?\n/g, "").length;
   },
   /**
    * カーソル位置を設定する

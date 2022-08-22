@@ -445,7 +445,7 @@ const Templates: layerTemplates = {
   },
   s18_4: {
     id: "s18_4",
-    commands: ["small","full"],
+    commands: ["small", "full"],
     pos: "shita",
     posList: ["shita"],
     text: "small shita W37 L2&L1",
