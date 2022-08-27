@@ -25,8 +25,10 @@ const layerContextManager = (props: propsType) => {
       ((ev.metaKey || ev.ctrlKey) && ev.code === "KeyY") ||
       ((ev.metaKey || ev.ctrlKey) && ev.shiftKey && ev.code === "KeyZ")
     ) {
+      ev.preventDefault();
       redo();
     } else if ((ev.metaKey || ev.ctrlKey) && ev.code === "KeyZ") {
+      ev.preventDefault();
       undo();
     }
   };
