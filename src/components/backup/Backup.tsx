@@ -6,6 +6,7 @@ import Popup from "@/components/popup/Popup";
 import { autoSave } from "@/@types/types";
 import Button from "@/components/button/Button";
 import { layerContext } from "@/components/LayerContext";
+import uuidUtil from "@/libraries/uuidUtil";
 
 type propType = {
   close: () => void;
@@ -35,6 +36,9 @@ const Backup: React.FC<propType> = (props) => {
       setLayerData(
         value.data.map((layer) => {
           layer.overwrite = true;
+          if (!layer.layerId) {
+            layer.layerId = uuidUtil.v4();
+          }
           return layer;
         })
       );

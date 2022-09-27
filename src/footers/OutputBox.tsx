@@ -38,7 +38,19 @@ const OutputBox = (): JSX.Element => {
     isReverse: boolean
   ): { command: string; comment: string } | undefined => {
     if (!window.__videoplayer.paused()) window.__videoplayer.pause();
-    const targetLine = stringArr[isReverse ? stringArr.length - 1 : 0];
+    const targetLine = stringArr[isReverse ? stringArr.length - 1 : 0]
+      ?.replace(/\[A0]/gi, "\u00A0")
+      .replace(/\[SP]/gi, "\u3000")
+      .replace(/\[00]/gi, "\u2000")
+      .replace(/\[01]/gi, "\u2001")
+      .replace(/\[02]/gi, "\u2002")
+      .replace(/\[03]/gi, "\u2003")
+      .replace(/\[04]/gi, "\u2004")
+      .replace(/\[05]/gi, "\u2005")
+      .replace(/\[06]/gi, "\u2006")
+      .replace(/\[0A]/gi, "\u200A")
+      .replace(/\[0B]/gi, "\u200B")
+      .replace(/\[TA?B]/gi, "\u0009");
     let command = "";
     const match = targetLine?.match(/^(?:\[([^\]]+)])?(.*)/);
     if (!match || !match[2]) return;
@@ -54,7 +66,7 @@ const OutputBox = (): JSX.Element => {
         }
       }
     }
-    const seekCommand = command.match(/\[tm(?:(\d+):)?(\d+)(?:\.(\d+))?]/);
+    const seekCommand = command.match(/tm(?:(\d+):)?(\d+)(?:\.(\d+))?/);
     if (seekCommand) {
       if (!seekCommand[1] && !seekCommand[3]) {
         window.__videoplayer.currentTime(
@@ -97,14 +109,16 @@ const OutputBox = (): JSX.Element => {
      * Reactの管理するelement.valueは正常に動作しないので↓を参考にする
      * https://stackoverflow.com/questions/23892547/what-is-the-best-way-to-trigger-onchange-event-in-react-js
      */
-    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-      window.HTMLInputElement.prototype,
-      "value"
-    )?.set;
-    if (!nativeInputValueSetter) return false;
-    nativeInputValueSetter.call(commentCommandInput, command);
-    commentCommandInput.dispatchEvent(new Event("change", { bubbles: true }));
-    commentCommandInput.dispatchEvent(new Event("input", { bubbles: true }));
+    if (command != "") {
+      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+        window.HTMLInputElement.prototype,
+        "value"
+      )?.set;
+      if (!nativeInputValueSetter) return false;
+      nativeInputValueSetter.call(commentCommandInput, command);
+      commentCommandInput.dispatchEvent(new Event("change", { bubbles: true }));
+      commentCommandInput.dispatchEvent(new Event("input", { bubbles: true }));
+    }
     const nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor(
       window.HTMLTextAreaElement.prototype,
       "value"
@@ -202,23 +216,13 @@ const OutputBox = (): JSX.Element => {
             value={textareaValue.join("\n")}
             disabled={isPosting}
             wrap="off"
-            onChange={(e) =>
-              setTextareaValue(e.target.value.split(/\r\n|\r|\n/))
-            }
+            onChange={(e) => {
+              const data = e.target.value.split(/\r\n|\r|\n/);
+              setTextareaValue(e.target.value === "" ? [] : data);
+            }}
           ></textarea>
         </div>
         <div className={Styles.row}>
-          <Button
-            disabled={isPosting}
-            text="逆から"
-            click={toggleIsReverse}
-            active={isReverse}
-          />
-          <Button
-            disabled={isPosting}
-            text="クリア"
-            click={() => setTextareaValue([])}
-          />
           <Button
             disabled={isPosting}
             text="1行セット"
@@ -233,6 +237,17 @@ const OutputBox = (): JSX.Element => {
           ) : (
             <Button disabled={isPosting} text="全行投下" click={onPostAll} />
           )}
+          <Button
+            disabled={isPosting}
+            text="クリア"
+            click={() => setTextareaValue([])}
+          />
+          <Button
+            disabled={isPosting}
+            text="逆から"
+            click={toggleIsReverse}
+            active={isReverse}
+          />
         </div>
       </div>
     </Spoiler>

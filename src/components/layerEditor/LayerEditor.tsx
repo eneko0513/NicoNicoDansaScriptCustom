@@ -120,6 +120,7 @@ const LayerEditor = () => {
               id={Styles.colorInput}
               className={Styles.colorInput}
               onChange={changeColor}
+              disabled={color === "" || color === "-"}
             />
           </div>
         </div>

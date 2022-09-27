@@ -11,18 +11,20 @@ import Button from "@/components/button/Button";
 import Dropdown from "@/components/dropdown/Dropdown";
 import Templates from "@/headers/Trace.templates";
 import { context } from "@/components/Context";
-import { layer, optionDataType } from "@/@types/types";
+import { layer } from "@/@types/types";
 import LayerSelector from "@/components/layerSelector/LayerSelector";
 import layerUtil from "@/libraries/layerUtil";
 import typeGuard from "@/libraries/typeGuard";
 import LayerPortal from "@/components/LayerPortal";
-import LayerContext from "@/components/LayerContext";
+import { layerContext } from "@/components/LayerContext";
 import BackgroundPicker from "@/components/backgroundPicker/BackgroundPicker";
 import LayerEditor from "@/components/layerEditor/LayerEditor";
 import Options_ from "@/options/Options";
 import Popup from "@/components/popup/Popup";
 import localStorage from "@/libraries/localStorage";
 import Backup from "@/components/backup/Backup";
+import uuidUtil from "@/libraries/uuidUtil";
+import Slider from "@/components/slider/Slider";
 
 /**
  * Traceブロック
@@ -33,21 +35,15 @@ const Trace = () => {
     [layerDropdownValue, setLayerDropdownValue] = useState<string>(
       "big_ue_ender_full_gothic_W17_L9"
     ),
-    [layerData, setLayerData] = useState<layer[]>([]),
-    [optionData, setOptionData] = useState<optionDataType>({
-      bgActive: -1,
-      bgImages: [],
-      bgEditing: false,
-      bgMode: "fill",
-      bgVisible: true,
-      grid: false,
-      replace: false,
-    }),
     [optionEditing, setOptionEditing] = useState<boolean>(false),
     [autoSaveWindow, setAutoSaveWindow] = useState<boolean>(false),
-    { exportLayer, setExportLayer } = useContext(context);
+    { exportLayer, setExportLayer } = useContext(context),
+    { layerData, setLayerData, optionData, setOptionData } =
+      useContext(layerContext);
   const layerDataRef = useRef(layerData),
     autoSaveInterval = useRef<number>(-1);
+  if (!layerData || !setLayerData || !optionData || !setOptionData)
+    return <></>;
   useEffect(() => {
     layerDataRef.current = layerData;
   }, [layerData]);
@@ -56,7 +52,8 @@ const Trace = () => {
     if (span <= 0) return;
     autoSaveInterval.current = window.setInterval(() => {
       const data: unknown = JSON.parse(localStorage.get("autoSave"));
-      if (!typeGuard.localStorage.isAutoSave(data)) return;
+      if (!typeGuard.localStorage.isAutoSave(data) || !layerDataRef.current)
+        return;
       data.push({ data: layerDataRef.current, timestamp: Date.now() });
       if (data.length > Number(localStorage.get("options_autoSave_max"))) {
         data.shift();
@@ -78,6 +75,17 @@ const Trace = () => {
         const targetData: layer[] = [];
         for (const layer of layerData) {
           if (isSelectedOnly && !layer.selected) continue;
+          layer.content = layer.content.map((value) => {
+            while (value.content.length < value.lineCount) {
+              value.content.push("");
+            }
+            while (value.content.length > value.lineCount) {
+              value.content[value.lineCount - 1] += value.content
+                .splice(value.lineCount)
+                .join("");
+            }
+            return value;
+          });
           targetData.push(layer);
         }
         const strings = layerUtil.toString(
@@ -122,6 +130,10 @@ const Trace = () => {
       () => setOptionData({ ...optionData, bgVisible: !optionData.bgVisible }),
       [optionData]
     ),
+    changeBackgroundTransparency = useCallback(
+      (t: number) => setOptionData({ ...optionData, bgTransparency: t }),
+      [optionData]
+    ),
     toggleOptionEditing = useCallback(
       () => setOptionEditing(!optionEditing),
       [optionEditing]
@@ -144,6 +156,7 @@ const Trace = () => {
           content: layerUtil.generateLineFromTemplate(template),
           selected: true,
           color: "#000000",
+          layerId: uuidUtil.v4(),
         },
       ]);
     }, [layerData, layerDropdownValue]),
@@ -179,7 +192,7 @@ const Trace = () => {
       const reader = new FileReader();
       const input = document.createElement("input");
       input.type = "file";
-      input.accept = ".dansk.json,*";
+      input.accept = ".json,*";
       input.onchange = (e) => {
         const target = e.target as HTMLInputElement;
         if (target?.files && target.files[0]) {
@@ -193,6 +206,9 @@ const Trace = () => {
         setLayerData(
           data.map((layer) => {
             layer.overwrite = true;
+            if (!layer.layerId) {
+              layer.layerId = uuidUtil.v4();
+            }
             return layer;
           })
         );
@@ -200,9 +216,7 @@ const Trace = () => {
       input.click();
     }, []);
   return (
-    <LayerContext
-      value={{ layerData, setLayerData, optionData, setOptionData }}
-    >
+    <>
       <Spoiler text={"Trace"}>
         <div className={Styles.table}>
           <div className={Styles.row}>
@@ -299,6 +313,14 @@ const Trace = () => {
                   value={""}
                 ></Button>
               )}
+              {optionData?.bgActive > -1 && (
+                <Slider
+                  change={changeBackgroundTransparency}
+                  value={100}
+                  max={100}
+                  min={0}
+                ></Slider>
+              )}
             </div>
           </div>
           <div className={`${Styles.row} ${Styles.layer}`}>
@@ -333,7 +355,7 @@ const Trace = () => {
         </Popup>
       )}
       {autoSaveWindow && <Backup close={() => setAutoSaveWindow(false)} />}
-    </LayerContext>
+    </>
   );
 };
 export default Trace;

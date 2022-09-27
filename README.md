@@ -19,6 +19,17 @@ Created By @Negima1072, @eneko0513 and @xpadev-net
 [デバッガー](about:debugging#/runtime/this-firefox)を開き、「一時的なアドオンを読み込む」から、先程リネームしたmanifest.jsonを選択します  
 
 ## 変更点
+### v1.0.4
+#### 変更
+- 既知の不具合の修正
+- 一部テンプレ値の修正
+- OutputBoxのボタンの並び順の変更
+
+#### 追加
+- 背景画像の透明度設定機能
+- CSS編集画面のプレビュー追加・変更できる値追加
+- Redo/Undo機能の追加
+
 ### v1.0.3
 #### 変更
 - レイヤー編集関連のバグ修正

@@ -84,7 +84,7 @@ const LayerSelector = () => {
         setLayerData([...layerData]);
         setSetting(-1);
       },
-      [isSetting]
+      [isSetting, layerData]
     ),
     remove = (key: number) => {
       if (!confirm(`削除してよろしいですか？`)) return;

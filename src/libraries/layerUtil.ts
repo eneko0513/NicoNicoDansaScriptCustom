@@ -24,16 +24,12 @@ const layerUtil = {
     const lines: layerLine[] = [];
     for (const size of layer.size) {
       for (let i = 0; i < (size.count || 1); i++) {
-        const line = [];
-        for (let j = 0; j < size.lineCount; j++) {
-          line.push("");
-        }
         lines.push({
           font: size.font,
           line: size.line,
           height: size.height,
           lineCount: size.lineCount,
-          content: line,
+          content: [],
         });
       }
     }

@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { context } from "@/components/Context";
 import ReactDOM from "react-dom";
 import Trace from "@/headers/Trace";
+import LayerContextManager from "@/headers/LayerContextManager";
 
 /**
  * ヘッダーブロック(プレイヤー上)
@@ -12,7 +13,9 @@ const Header = (): JSX.Element => {
   if (!HeaderElement) return <></>;
   return ReactDOM.createPortal(
     <>
-      <Trace />
+      <LayerContextManager>
+        <Trace />
+      </LayerContextManager>
     </>,
     HeaderElement
   );

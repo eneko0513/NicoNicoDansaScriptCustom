@@ -14,8 +14,9 @@ const LayerScale = styled.div<{ scaleX: number; scaleY: number }>`
   left: 0;
 `;
 
-const BackgroundImage = styled.img<{ mode: objectFitArgs }>`
+const BackgroundImage = styled.img<{ mode: objectFitArgs; opacity: number }>`
   object-fit: ${(props) => props.mode};
+  opacity: ${(props) => props.opacity};
 `;
 
 function beforeUnload(e: BeforeUnloadEvent) {
@@ -34,7 +35,7 @@ const LayerContainer = (): JSX.Element => {
   useEffect(() => {
     const classList = videoSymbolContainerCanvas?.parentElement?.classList,
       cssClass = Styles.VideoSymbolContainer || "_";
-    if (!classList) return;
+    if (!classList || process.env.NODE_ENV === "development") return;
     if (layerData && layerData.length > 0) {
       window.onbeforeunload = beforeUnload;
       classList.toggle(cssClass, true);
@@ -84,6 +85,7 @@ const LayerContainer = (): JSX.Element => {
               src={optionData.bgImages[optionData.bgActive]}
               alt={"backgroundImage"}
               mode={optionData.bgMode}
+              opacity={optionData.bgTransparency / 100}
             />,
             BackgroundImageElement
           )

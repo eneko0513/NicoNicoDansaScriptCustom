@@ -1,8 +1,8 @@
 ﻿{
   "name": "DanSukuMizu",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "manifest_version": 3,
-  "description": "Created By @Negima1072, @eneko0513 and @xpadev-net",
+  "description": "Modified By @Negima1072, @eneko0513 and @xpadev-net",
   "content_scripts": [
     {
       "matches": ["https://www.nicovideo.jp/watch/*"],

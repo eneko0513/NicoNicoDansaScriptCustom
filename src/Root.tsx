@@ -41,8 +41,9 @@ const init = async () => {
     videoSymbolContainerCanvas: HTMLCanvasElement | undefined,
     videoContainer,
     mainContainerPlayerPanel,
+    videoPlayer,
     count = 0;
-  while (count < 30) {
+  while (count < 300) {
     mainContainer = document.getElementsByClassName(
       "MainContainer"
     )[0] as HTMLDivElement;
@@ -62,6 +63,7 @@ const init = async () => {
     videoContainer = document.getElementsByClassName(
       "InView VideoContainer"
     )[0] as HTMLDivElement;
+    videoPlayer = document.getElementById("VideoPlayer") as HTMLDivElement;
     count++;
     if (
       mainContainer === undefined ||
@@ -69,7 +71,8 @@ const init = async () => {
       mainContainerPlayerPanel === undefined ||
       CommentRenderer === undefined ||
       videoSymbolContainerCanvas === undefined ||
-      videoContainer === undefined
+      videoContainer === undefined ||
+      videoPlayer === undefined
     ) {
       await sleep(100);
     } else {
@@ -82,7 +85,8 @@ const init = async () => {
     mainContainerPlayerPanel === undefined ||
     CommentRenderer === undefined ||
     videoSymbolContainerCanvas === undefined ||
-    videoContainer === undefined
+    videoContainer === undefined ||
+    videoPlayer === undefined
   ) {
     throw new Error("fail to get required element");
   }
@@ -100,10 +104,11 @@ const init = async () => {
   const FooterElement = document.createElement("div");
   mainContainer.after(FooterElement);
   const BackgroundImageElement = document.createElement("div");
-  CommentRenderer.insertBefore(
+  /*CommentRenderer.insertBefore(
     BackgroundImageElement,
     CommentRenderer.firstChild
-  );
+  );*/
+  videoPlayer.appendChild(BackgroundImageElement);
   const LayerElement = document.createElement("div");
   videoSymbolContainerCanvas.after(LayerElement);
   const MemoElement = document.createElement("div");

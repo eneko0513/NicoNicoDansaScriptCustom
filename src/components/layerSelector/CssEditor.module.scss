@@ -1,10 +1,32 @@
-.table {
-  border-collapse: collapse;
-  th {
-    text-align: center;
+.row {
+  display: flex;
+  flex-direction: row;
+  height: 450px;
+  .preview {
+    position: relative;
+    width: 700px;
+    overflow: hidden;
+    .layerWrapper {
+      position: absolute;
+      pointer-events: none;
+      & > div:first-child > div {
+        outline: #ff00ff solid 0.2px;
+      }
+    }
   }
-  th,
-  td {
-    border: solid 1px black;
+  .tableWrapper {
+    overflow-y: scroll;
+    align-self: center;
+    height: 100%;
+    .table {
+      border-collapse: collapse;
+      th {
+        text-align: center;
+      }
+      th,
+      td {
+        border: solid 1px black;
+      }
+    }
   }
 }
