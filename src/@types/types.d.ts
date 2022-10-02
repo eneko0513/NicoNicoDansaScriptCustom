@@ -138,6 +138,7 @@ type localStorageKeys =
   | "options_usePat"
   | "options_useOriginal"
   | "options_useOriginal_text"
+  | "options_exportLayerName"
   | "options_timespan_main"
   | "options_timespan_owner"
   | "options_useMs"

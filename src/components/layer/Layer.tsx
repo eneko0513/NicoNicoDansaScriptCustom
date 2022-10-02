@@ -83,7 +83,13 @@ const Layer = (props: LayerProps): JSX.Element => {
     }
     const value = e.target.value.split("\n");
     if (!line) return;
-    if (value.length > line.lineCount) {
+    if (
+      value.length > line.lineCount ||
+      value.reduce(
+        (pv, val) => pv + Number(!!val.match(/[\u00A0\u0020]|\u3033\u3035/g)),
+        0
+      ) > 0
+    ) {
       e.target.style.background = "rgba(255,0,0,0.3)";
     } else {
       e.target.style.background = "none";

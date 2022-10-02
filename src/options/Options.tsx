@@ -13,6 +13,16 @@ const Options = () => {
       }, {} as { [key in localStorageKeys]: string })
     ),
     updateValue = (key: localStorageKeys, result: string) => {
+      //この処理は新機能追加による暫定的な処置です
+      if (
+        key === "options_exportLayerName" &&
+        !value["options_commandOrder"].includes("layerName") &&
+        result === "true"
+      ) {
+        value["options_commandOrder"] =
+          "layerName|" + value["options_commandOrder"];
+        localStorage.set("options_commandOrder", value["options_commandOrder"]);
+      }
       value[key] = result;
       setValue({ ...value });
       localStorage.set(key, result);

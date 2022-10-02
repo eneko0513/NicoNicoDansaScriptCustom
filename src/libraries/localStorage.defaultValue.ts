@@ -14,7 +14,8 @@ const defaultValue: localStorageDefaultValues = {
     type: "number",
   },
   options_commandOrder: {
-    defaultValue: "ca|patissier|size|position|color|font|ender|full|original",
+    defaultValue:
+      "layerName|ca|patissier|size|position|color|font|ender|full|original",
     description: "コマンドの並び替え",
     dangerous: false,
     type: "string",
@@ -43,6 +44,12 @@ const defaultValue: localStorageDefaultValues = {
     dangerous: false,
     type: "string",
     required: "options_useOriginal",
+  },
+  options_exportLayerName: {
+    defaultValue: "false",
+    description: "レイヤー名をコマンドに追加",
+    dangerous: false,
+    type: "boolean",
   },
   options_timespan_owner: {
     defaultValue: "1000",

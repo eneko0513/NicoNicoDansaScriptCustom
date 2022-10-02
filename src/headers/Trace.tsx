@@ -107,7 +107,7 @@ const Trace = () => {
         }
         setExportLayer([...exportLayer, ...layerString]);
       },
-      [exportLayer, layerData]
+      [exportLayer, layerData, tabMode]
     ),
     toggleTabMode = useCallback(() => setTabMode(!tabMode), [tabMode]),
     toggleReplaceMode = useCallback(
