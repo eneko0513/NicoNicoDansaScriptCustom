@@ -1,0 +1,49 @@
+.wrapper {
+  .colorLabel {
+    display: block;
+    width: 24px;
+    height: 24px;
+    position: relative;
+    .colorInput {
+      position: absolute;
+      opacity: 0;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      z-index: -1;
+    }
+  }
+  &.disabled .colorLabel {
+    background: linear-gradient(
+      45deg,
+      white,
+      white 49%,
+      red 49%,
+      red 51%,
+      white 51%,
+      white
+    );
+  }
+  &:not(.disabled):hover .hoverItem {
+    display: block;
+  }
+  .hoverItem {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    background: white;
+    border: solid 1px black;
+    border-radius: 5px;
+    padding: 2px 2px;
+    .input {
+      width: 75px;
+      border: solid black 1px;
+      border-radius: 5px;
+      padding: 5px 10px;
+      &:invalid {
+        border: solid red 1px;
+      }
+    }
+  }
+}

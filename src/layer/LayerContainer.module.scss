@@ -11,6 +11,10 @@
   position: relative;
   z-index: 1;
   transform-origin: 0 0;
+  &.hide {
+    pointer-events: none;
+    opacity: 0;
+  }
 }
 .VideoSymbolContainer {
   z-index: 20 !important;

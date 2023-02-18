@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import defaultValue from "@/libraries/localStorage.defaultValue";
+import { defaultValue } from "@/libraries/localStorage.defaultValue";
 import { localStorageKeys, localStorageOptionItem } from "@/@types/types";
-import localStorage from "@/libraries/localStorage";
+import { Storage } from "@/libraries/localStorage";
 import Styles from "./Options.module.scss";
 
 const Options = () => {
   const [value, setValue] = useState(
       (Object.keys(defaultValue) as localStorageKeys[]).reduce((pv, key) => {
         if (!key.match(/^options_/)) return pv;
-        pv[key] = localStorage.get(key);
+        pv[key] = Storage.get(key);
         return pv;
       }, {} as { [key in localStorageKeys]: string })
     ),
@@ -21,17 +21,17 @@ const Options = () => {
       ) {
         value["options_commandOrder"] =
           "layerName|" + value["options_commandOrder"];
-        localStorage.set("options_commandOrder", value["options_commandOrder"]);
+        Storage.set("options_commandOrder", value["options_commandOrder"]);
       }
       value[key] = result;
       setValue({ ...value });
-      localStorage.set(key, result);
+      Storage.set(key, result);
     };
   return (
     <div className={Styles.wrapper}>
       {(Object.keys(value) as localStorageKeys[]).map((key) => {
         const defValue = defaultValue[key] as localStorageOptionItem;
-        if (defValue.required && localStorage.get(defValue.required) !== "true")
+        if (defValue.required && Storage.get(defValue.required) !== "true")
           return <div key={key}></div>;
         switch (defValue.type) {
           case "boolean":
@@ -80,4 +80,4 @@ const Options = () => {
     </div>
   );
 };
-export default Options;
+export { Options };

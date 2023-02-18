@@ -1,47 +1,40 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import Popup from "@/components/popup/Popup";
-import BackgroundImageDisplay from "@/components/backgroundPicker/BackgroundImageDisplay";
-import { layerContext } from "@/components/LayerContext";
-import Button from "@/components/button/Button";
-import Dropdown from "@/components/dropdown/Dropdown";
-import { objectFitArgs } from "@/@types/types";
-import Tips from "@/components/tips/Tips";
+import React, { useCallback, useState } from "react";
+import { Popup } from "@/components/popup/Popup";
+import { BackgroundImageDisplay } from "@/headers/backgroundPicker/BackgroundImageDisplay";
+import { Button } from "@/components/button/Button";
+import { Dropdown } from "@/components/dropdown/Dropdown";
+import { objectFitArgs } from "@/@types/background";
+import { Tips } from "@/components/tips/Tips";
 import Styles from "./BackgroundPicker.module.scss";
+import { useAtom } from "jotai";
+import { backgroundAtom } from "@/atoms";
 
 /**
  * 背景の追加、選択、描画モード選択
  * @constructor
  */
 const BackgroundPicker = () => {
-  const { optionData, setOptionData } = useContext(layerContext);
+  const [background, setBackground] = useAtom(backgroundAtom);
   const [urlInputActive, setUrlInputActive] = useState<boolean>(false),
     [urlInputValue, setUrlInputValue] = useState<string>(""),
-    colorInput = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    if (!colorInput.current) return;
-    colorInput.current.onchange = (e) => {
-      const color = (e.target as HTMLInputElement)?.value,
-        canvas = document.createElement("canvas"),
-        context = canvas.getContext("2d");
-      if (!context || !optionData || !setOptionData) return;
-      canvas.width = 1920;
-      canvas.height = 1080;
-      context.fillStyle = color;
-      context.fillRect(0, 0, 1920, 1080);
-      canvas.toBlob((blob) => {
-        if (!blob) return;
-        optionData.bgImages.push(URL.createObjectURL(blob));
-        setOptionData({ ...optionData });
-      });
-    };
-  }, [colorInput]);
-  if (!optionData || !setOptionData) return <></>;
+    [colorInputActive, setColorInputActive] = useState<boolean>(false),
+    [colorInputValue, setColorInputValue] = useState<string>("#000000");
+  const addColorBg = () => {
+    setColorInputActive(false);
+    const color = colorInputValue,
+      canvas = document.createElement("canvas"),
+      context = canvas.getContext("2d");
+    if (!context) return;
+    canvas.width = 1920;
+    canvas.height = 1080;
+    context.fillStyle = color;
+    context.fillRect(0, 0, 1920, 1080);
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+      background.images.push(URL.createObjectURL(blob));
+      setBackground({ ...background });
+    });
+  };
   const loadFromFile = () => {
       const input = document.createElement("input");
       input.type = "file";
@@ -50,8 +43,8 @@ const BackgroundPicker = () => {
         const reader = new FileReader();
         reader.onload = (e) => {
           if (typeof e.target?.result === "string") {
-            optionData.bgImages.push(e.target.result);
-            setOptionData({ ...optionData });
+            background.images.push(e.target.result);
+            setBackground({ ...background });
           }
         };
         reader.readAsDataURL(input.files[0]);
@@ -62,28 +55,25 @@ const BackgroundPicker = () => {
       if (
         urlInputValue.match(/^https?:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+$/)
       ) {
-        optionData.bgImages.push(urlInputValue);
-        setOptionData({ ...optionData });
+        background.images.push(urlInputValue);
+        setBackground({ ...background });
         setUrlInputValue("");
         setUrlInputActive(false);
       }
-    },
-    addColorBackground = () => {
-      colorInput.current?.click();
     };
 
   const drawModeOnChange = useCallback(
     (value: string) => {
-      optionData.bgMode = value as objectFitArgs;
-      setOptionData({ ...optionData });
+      background.mode = value as objectFitArgs;
+      setBackground({ ...background });
     },
-    [optionData]
+    [background]
   );
   return (
     <>
       <Popup
         title={"背景"}
-        close={() => setOptionData({ ...optionData, bgEditing: false })}
+        close={() => setBackground({ ...background, open: false })}
       >
         <BackgroundImageDisplay />
         <div>
@@ -92,8 +82,10 @@ const BackgroundPicker = () => {
             click={() => setUrlInputActive(true)}
             text={"画像をURLから読み込む"}
           />
-          <Button click={addColorBackground} text={"単色背景を追加"} />
-          <input type="color" className={Styles.color} ref={colorInput} />
+          <Button
+            click={() => setColorInputActive(true)}
+            text={"単色背景を追加"}
+          />
         </div>
         <div>
           表示モード：
@@ -106,7 +98,7 @@ const BackgroundPicker = () => {
               { text: "none", value: "none" },
               { text: "scale-down", value: "scale-down" },
             ]}
-            selected={optionData.bgMode}
+            selected={background.mode}
           />
           <Tips>
             <table className={Styles.tips}>
@@ -164,7 +156,23 @@ const BackgroundPicker = () => {
           <Button click={loadFromURL} text={"追加"} />
         </Popup>
       )}
+      {colorInputActive && (
+        <Popup
+          title={"単色背景を追加"}
+          close={() => {
+            setColorInputActive(false);
+          }}
+        >
+          <input
+            className={Styles.urlInput}
+            value={colorInputValue}
+            onChange={(e) => setColorInputValue(e.target.value)}
+            type={"color"}
+          />
+          <Button click={addColorBg} text={"追加"} />
+        </Popup>
+      )}
     </>
   );
 };
-export default BackgroundPicker;
+export { BackgroundPicker };

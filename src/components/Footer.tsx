@@ -1,22 +1,23 @@
-import CommandBox from "@/footers/CommandBox";
-import React, { useContext } from "react";
-import { context } from "@/components/Context";
+import { CommandBox } from "@/footers/CommandBox";
+import React from "react";
 import ReactDOM from "react-dom";
-import OutputBox from "@/footers/OutputBox";
+import { OutputBox } from "@/footers/OutputBox";
+import { useAtom } from "jotai";
+import { elementAtom } from "@/atoms";
 
 /**
  * フッターブロック(プレイヤー下)
  * @constructor
  */
 const Footer = (): JSX.Element => {
-  const { FooterElement } = useContext(context);
-  if (!FooterElement) return <></>;
+  const [elements] = useAtom(elementAtom);
+  if (!elements) return <></>;
   return ReactDOM.createPortal(
     <>
       <CommandBox />
       <OutputBox />
     </>,
-    FooterElement
+    elements.FooterElement
   );
 };
-export default Footer;
+export { Footer };

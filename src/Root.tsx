@@ -1,32 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import Context from "@/components/Context";
-import Footer from "@/components/Footer";
-import getElements from "@/libraries/getElements";
-import Header from "@/components/Header";
-import Main from "@/components/Main";
-import sleep from "@/libraries/sleep";
-import MemoPortal from "@/components/MemoPortal";
-import inject from "@/libraries/cssInjector";
+import { Footer } from "@/components/Footer";
+import { getElements } from "@/libraries/getElements";
+import { Header } from "@/components/Header";
+import { Main } from "@/components/Main";
+import { sleep } from "@/libraries/sleep";
+import { MemoPortal } from "@/components/MemoPortal";
+import { inject } from "@/libraries/cssInjector";
+import { elementAtom } from "@/atoms";
+import { useSetAtom } from "jotai";
 
 /**
  * Reactのルート要素
  * @constructor
  */
 const Root = (): JSX.Element => {
-  const [data, setData] = useState({}),
-    [exportLayer, setExportLayer] = useState<string[]>([]);
+  const setElements = useSetAtom(elementAtom);
   useEffect(() => {
-    const init = async () => setData({ ...(await getElements()) });
+    const init = async () => setElements(await getElements());
     void init();
   }, []);
   return (
-    <Context value={{ ...data, exportLayer, setExportLayer }}>
+    <>
       <Header />
       <Main />
       <MemoPortal />
       <Footer />
-    </Context>
+    </>
   );
 };
 

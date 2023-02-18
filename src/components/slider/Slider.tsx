@@ -21,22 +21,24 @@ type sliderProps = {
  * @param props
  * @constructor
  */
-const Button = (props: sliderProps) => {
+const Slider = (props: sliderProps) => {
   const [value, setValue] = useState<number>(props.value);
   const onSliderChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(Number(e.target.value));
     props.change(Number(e.target.value));
   };
   return (
-    <input
-      type={"range"}
-      className={`${Styles.slider} ${props.active ? Styles.active : ""}`}
-      onChange={onSliderChange}
-      disabled={props.disabled || false}
-      value={value}
-      min={props.min}
-      max={props.max}
-    />
+    <div className={Styles.slidercont}>
+      <input
+        type={"range"}
+        className={`${Styles.slider} ${props.active ? Styles.active : ""}`}
+        onChange={onSliderChange}
+        disabled={props.disabled || false}
+        value={value}
+        min={props.min}
+        max={props.max}
+      />
+    </div>
   );
 };
-export default Button;
+export { Slider };

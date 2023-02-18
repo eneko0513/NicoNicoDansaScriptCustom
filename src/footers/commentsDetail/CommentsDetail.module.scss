@@ -1,0 +1,28 @@
+.wrapper {
+  min-width: 400px;
+  min-height: 200px;
+  max-height: 75vh;
+  overflow-y: scroll;
+}
+
+.table {
+  border: 1.5px solid black;
+
+  th,
+  td {
+    padding: 5px;
+    border: 1px solid black;
+    min-width: 55px;
+    text-align: right;
+  }
+
+  th {
+    text-align: center;
+  }
+
+  td.commandTd {
+    text-align: left;
+    max-width: 500px;
+    overflow-wrap: break-word;
+  }
+}

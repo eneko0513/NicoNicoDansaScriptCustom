@@ -6,8 +6,8 @@ import React, {
   useState,
 } from "react";
 import Styles from "./VideoController.module.scss";
-import Spoiler from "@/components/spoiler/Spoiler";
-import timeUtil from "@/libraries/timeUtil";
+import { Spoiler } from "@/components/spoiler/Spoiler";
+import { str2time, time2str } from "@/libraries/timeUtil";
 
 const buttons: number[] = [0.01, 0.03, 0.1, 0.3, 1, 3];
 
@@ -50,7 +50,7 @@ const VideoController = (): JSX.Element => {
   const onInputKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       setValueChanged(true);
-      const time = timeUtil.str2time(value);
+      const time = str2time(value);
       if (e.key === "Enter" && time !== undefined) {
         (e.target as HTMLInputElement).blur();
       }
@@ -59,7 +59,7 @@ const VideoController = (): JSX.Element => {
   );
   const onInputBlur = useCallback(() => {
     if (isValueChanged) {
-      const time = timeUtil.str2time(value);
+      const time = str2time(value);
       if (time !== undefined) {
         void updateTime(time, !!value.match(/^[+-]/));
       }
@@ -71,7 +71,7 @@ const VideoController = (): JSX.Element => {
       setValueChanged(false);
       return;
     }
-    setValue(timeUtil.time2str(window.__videoplayer.currentTime()));
+    setValue(time2str(window.__videoplayer.currentTime()));
     requestAnimationFrame(updateCurrentTime);
   };
   useEffect(() => updateCurrentTime(), []);
@@ -111,4 +111,4 @@ const VideoController = (): JSX.Element => {
     </Spoiler>
   );
 };
-export default VideoController;
+export { VideoController };

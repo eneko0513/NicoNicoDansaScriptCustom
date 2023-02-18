@@ -1,30 +1,29 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import Spoiler from "@/components/spoiler/Spoiler";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Spoiler } from "@/components/spoiler/Spoiler";
 import Styles from "./Trace.module.scss";
-import Button from "@/components/button/Button";
-import Dropdown from "@/components/dropdown/Dropdown";
-import Templates from "@/headers/Trace.templates";
-import { context } from "@/components/Context";
-import { layer } from "@/@types/types";
-import LayerSelector from "@/components/layerSelector/LayerSelector";
-import layerUtil from "@/libraries/layerUtil";
-import typeGuard from "@/libraries/typeGuard";
-import LayerPortal from "@/components/LayerPortal";
-import { layerContext } from "@/components/LayerContext";
-import BackgroundPicker from "@/components/backgroundPicker/BackgroundPicker";
-import LayerEditor from "@/components/layerEditor/LayerEditor";
-import Options_ from "@/options/Options";
-import Popup from "@/components/popup/Popup";
-import localStorage from "@/libraries/localStorage";
-import Backup from "@/components/backup/Backup";
-import uuidUtil from "@/libraries/uuidUtil";
-import Slider from "@/components/slider/Slider";
+import { Button } from "@/components/button/Button";
+import { Dropdown } from "@/components/dropdown/Dropdown";
+import { Templates } from "@/headers/Trace.templates";
+import { layer } from "@/@types/layer";
+import { LayerSelector } from "@/headers/layerSelector/LayerSelector";
+import { layerUtil } from "@/headers/layerUtil/layerUtil";
+import { typeGuard } from "@/libraries/typeGuard";
+import { LayerPortal } from "@/components/LayerPortal";
+import { BackgroundPicker } from "@/headers/backgroundPicker/BackgroundPicker";
+import { LayerEditor } from "@/headers/layerEditor/LayerEditor";
+import { Options } from "@/options/Options";
+import { Popup } from "@/components/popup/Popup";
+import { Storage } from "@/libraries/localStorage";
+import { Backup } from "@/headers/backup/Backup";
+import { uuid } from "@/libraries/uuidUtil";
+import { Slider } from "@/components/slider/Slider";
+import { useAtom } from "jotai";
+import {
+  backgroundAtom,
+  exportLayerAtom,
+  layerAtom,
+  optionAtom,
+} from "@/atoms";
 
 /**
  * Traceブロック
@@ -37,56 +36,69 @@ const Trace = () => {
     ),
     [optionEditing, setOptionEditing] = useState<boolean>(false),
     [autoSaveWindow, setAutoSaveWindow] = useState<boolean>(false),
-    { exportLayer, setExportLayer } = useContext(context),
-    { layerData, setLayerData, optionData, setOptionData } =
-      useContext(layerContext);
+    [exportLayer, setExportLayer] = useAtom(exportLayerAtom),
+    [layerData, setLayerData] = useAtom(layerAtom),
+    [optionData, setOptionData] = useAtom(optionAtom),
+    [background, setBackground] = useAtom(backgroundAtom);
   const layerDataRef = useRef(layerData),
     autoSaveInterval = useRef<number>(-1);
-  if (!layerData || !setLayerData || !optionData || !setOptionData)
-    return <></>;
   useEffect(() => {
     layerDataRef.current = layerData;
   }, [layerData]);
   useEffect(() => {
-    const span = Number(localStorage.get("options_autoSave_span"));
+    const span = Number(Storage.get("options_autoSave_span"));
     if (span <= 0) return;
     autoSaveInterval.current = window.setInterval(() => {
-      const data: unknown = JSON.parse(localStorage.get("autoSave"));
-      if (!typeGuard.localStorage.isAutoSave(data) || !layerDataRef.current)
+      const data: unknown = JSON.parse(Storage.get("autoSave"));
+      if (
+        !typeGuard.localStorage.isAutoSave(data) ||
+        !layerDataRef.current ||
+        layerDataRef.current.length < 1 ||
+        JSON.stringify(layerDataRef.current) === JSON.stringify(data.at(-1))
+      )
         return;
       data.push({ data: layerDataRef.current, timestamp: Date.now() });
-      if (data.length > Number(localStorage.get("options_autoSave_max"))) {
+      if (data.length > Number(Storage.get("options_autoSave_max"))) {
         data.shift();
       }
-      localStorage.set("autoSave", data);
+      Storage.set("autoSave", data);
     }, span * 60 * 1000);
     return () => {
       window.clearInterval(autoSaveInterval.current);
       autoSaveInterval.current = -1;
     };
   }, [setTabMode]);
-  if (exportLayer === undefined || setExportLayer === undefined) return <></>;
   const exportHandler = useCallback(
       (value: string) => {
         const layerString: string[] = [],
           isMonospaced = !!value.match(/Monospaced/),
           isOwner = !!value.match(/Owner/),
           isSelectedOnly = !!value.match(/Selected/);
-        const targetData: layer[] = [];
+        let targetData: layer[] = [];
         for (const layer of layerData) {
           if (isSelectedOnly && !layer.selected) continue;
-          layer.content = layer.content.map((value) => {
-            while (value.content.length < value.lineCount) {
-              value.content.push("");
-            }
-            while (value.content.length > value.lineCount) {
-              value.content[value.lineCount - 1] += value.content
-                .splice(value.lineCount)
-                .join("");
-            }
-            return value;
+          targetData.push({
+            ...layer,
+            content: layer.content.map((value) => {
+              const content = [...value.content];
+              while (content.length < value.lineCount) {
+                content.push("");
+              }
+              while (content.length > value.lineCount) {
+                content[value.lineCount - 1] += content
+                  .splice(value.lineCount)
+                  .join("");
+              }
+              return { ...value, content };
+            }),
           });
-          targetData.push(layer);
+        }
+
+        if (
+          !isSelectedOnly &&
+          Storage.get("options_exportHiddenLayer") === "false"
+        ) {
+          targetData = targetData.filter((layer) => layer.visible);
         }
         const strings = layerUtil.toString(
           targetData,
@@ -123,31 +135,51 @@ const Trace = () => {
       []
     ),
     openBackgroundMenu = useCallback(
-      () => setOptionData({ ...optionData, bgEditing: true }),
-      [optionData]
+      () => setBackground({ ...background, open: true }),
+      [background]
     ),
     toggleBackgroundVisible = useCallback(
-      () => setOptionData({ ...optionData, bgVisible: !optionData.bgVisible }),
-      [optionData]
+      () => setBackground({ ...background, visible: !background.visible }),
+      [background]
     ),
     changeBackgroundTransparency = useCallback(
-      (t: number) => setOptionData({ ...optionData, bgTransparency: t }),
-      [optionData]
+      (t: number) => setBackground({ ...background, transparency: t }),
+      [background]
     ),
     toggleOptionEditing = useCallback(
       () => setOptionEditing(!optionEditing),
       [optionEditing]
     ),
+    togglePreview = useCallback(
+      () =>
+        setOptionData({
+          ...optionData,
+          preview:
+            optionData.preview === "disable"
+              ? "enable"
+              : optionData.preview === "enable"
+              ? "previewOnly"
+              : "disable",
+        }),
+      [optionData]
+    ),
     addLayer = useCallback(() => {
       const id = layerUtil.getIdByValue(layerDropdownValue);
       const template = Templates[id];
       if (!typeGuard.trace.template(template)) return;
-      const _layerData = layerData.map((value) => {
-        value.selected = false;
-        return value;
-      });
+      const color: string | false | undefined = layerData.reduce((pv, val) => {
+        if (val.selected) {
+          val.selected = false;
+          if (pv === undefined) {
+            return val.color;
+          } else {
+            return false;
+          }
+        }
+        return pv;
+      }, undefined as undefined | false | string);
       setLayerData([
-        ..._layerData,
+        ...layerData,
         {
           ...template,
           type: id,
@@ -155,8 +187,8 @@ const Trace = () => {
           visible: true,
           content: layerUtil.generateLineFromTemplate(template),
           selected: true,
-          color: "#000000",
-          layerId: uuidUtil.v4(),
+          color: color || "#000000",
+          layerId: uuid(),
         },
       ]);
     }, [layerData, layerDropdownValue]),
@@ -207,7 +239,7 @@ const Trace = () => {
           data.map((layer) => {
             layer.overwrite = true;
             if (!layer.layerId) {
-              layer.layerId = uuidUtil.v4();
+              layer.layerId = uuid();
             }
             return layer;
           })
@@ -273,6 +305,16 @@ const Trace = () => {
                 text={"設定"}
                 active={optionEditing}
               />
+              <Button
+                click={togglePreview}
+                text={
+                  optionData.preview === "disable"
+                    ? "編集"
+                    : optionData.preview === "previewOnly"
+                    ? "プレビュー"
+                    : "編集+プレビュー"
+                }
+              />
             </div>
           </div>
           <div className={Styles.row}>
@@ -306,14 +348,14 @@ const Trace = () => {
             </div>
             <div className={Styles.block}>
               <Button click={openBackgroundMenu} text={"背景設定"} value={""} />
-              {optionData?.bgActive > -1 && (
+              {background.selected > -1 && (
                 <Button
                   click={toggleBackgroundVisible}
-                  text={optionData.bgVisible ? "画像非表示" : "画像表示"}
+                  text={background.visible ? "画像非表示" : "画像表示"}
                   value={""}
                 ></Button>
               )}
-              {optionData?.bgActive > -1 && (
+              {background.selected > -1 && (
                 <Slider
                   change={changeBackgroundTransparency}
                   value={100}
@@ -348,14 +390,14 @@ const Trace = () => {
         </div>
         <LayerPortal />
       </Spoiler>
-      {optionData.bgEditing && <BackgroundPicker />}
+      {background.open && <BackgroundPicker />}
       {optionEditing && (
         <Popup title={"設定"} close={toggleOptionEditing}>
-          <Options_ />
+          <Options />
         </Popup>
       )}
       {autoSaveWindow && <Backup close={() => setAutoSaveWindow(false)} />}
     </>
   );
 };
-export default Trace;
+export { Trace };

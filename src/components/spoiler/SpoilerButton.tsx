@@ -29,4 +29,4 @@ const SpoilerButton: React.FC<propType> = (props) => {
     </div>
   );
 };
-export default SpoilerButton;
+export { SpoilerButton };

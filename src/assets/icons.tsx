@@ -57,4 +57,4 @@ const icons = {
     </svg>
   ),
 };
-export default icons;
+export { icons };

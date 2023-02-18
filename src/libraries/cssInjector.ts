@@ -38,4 +38,4 @@ const inject = () => {
   styleElement.innerHTML = style;
   document.body.append(styleElement);
 };
-export default inject;
+export { inject };

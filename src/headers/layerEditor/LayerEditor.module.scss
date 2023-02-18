@@ -1,0 +1,24 @@
+.table {
+  display: flex;
+  flex-direction: column;
+  border: 1.5px solid #252525;
+  padding: 5px;
+  margin: 5px;
+  .row {
+    display: flex;
+    flex-direction: row;
+    padding: 2px 0;
+    &.layer {
+      height: 140px;
+    }
+    .block:not(:last-child) {
+      margin-right: 20px;
+    }
+  }
+}
+.colorInputWrapper {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  outline: solid 1px black;
+}

@@ -1,35 +1,29 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { context } from "@/components/Context";
+import { useCallback, useEffect, useRef, useState } from "react";
 import React from "react";
-import Spoiler from "@/components/spoiler/Spoiler";
+import { Spoiler } from "@/components/spoiler/Spoiler";
 import Styles from "./OutputBox.module.scss";
-import Button from "@/components/button/Button";
-import sleep from "@/libraries/sleep";
-import localStorage from "@/libraries/localStorage";
+import { Button } from "@/components/button/Button";
+import { sleep } from "@/libraries/sleep";
+import { Storage } from "@/libraries/localStorage";
+import { CommentsDetail } from "@/footers/commentsDetail/CommentsDetail";
+import { useAtom } from "jotai";
+import { elementAtom, exportLayerAtom } from "@/atoms";
 
 /**
  * 入出力用のテキストエリア
  * @constructor
  */
 const OutputBox = (): JSX.Element => {
-  const {
-      exportLayer,
-      setExportLayer,
-      commentInputTextarea,
-      commentCommandInput,
-    } = useContext(context),
+  const [elements] = useAtom(elementAtom),
+    [exportLayer, setExportLayer] = useAtom(exportLayerAtom),
     [textareaValue, setTextareaValue] = useState<string[]>([]),
     [isReverse, setIsReverse] = useState<boolean>(false),
     [isPosting, setIsPosting] = useState<boolean>(false),
+    [isShowDetails, setIsShowDetails] = useState<boolean>(false),
     [spoilerMessage, setSpoilerMessage] = useState<string>(""),
     postAllCancel = useRef<boolean>(false);
   useEffect(() => {
-    if (
-      exportLayer === undefined ||
-      setExportLayer === undefined ||
-      exportLayer.length === 0
-    )
-      return;
+    if (!elements || exportLayer.length === 0) return;
     setTextareaValue([...textareaValue, ...exportLayer]);
     setExportLayer([]);
   }, [exportLayer, textareaValue]);
@@ -54,7 +48,7 @@ const OutputBox = (): JSX.Element => {
     let command = "";
     const match = targetLine?.match(/^(?:\[([^\]]+)])?(.*)/);
     if (!match || !match[2]) return;
-    const comment = match[2];
+    let comment = match[2];
     if (match[1]) {
       command = match[1];
     } else if (isReverse) {
@@ -72,7 +66,7 @@ const OutputBox = (): JSX.Element => {
         window.__videoplayer.currentTime(
           window.__videoplayer.currentTime() +
             Number(seekCommand[2]) /
-              (localStorage.get("options_useMs") === "true" ? 1000 : 100)
+              (Storage.get("options_useMs") === "true" ? 1000 : 100)
         );
       } else {
         let currentTime = 0;
@@ -86,10 +80,11 @@ const OutputBox = (): JSX.Element => {
       stringArr[isReverse ? stringArr.length - 1 : 0] = comment;
       return getCommandAndComment(stringArr, isReverse);
     }
+    comment = comment.replace(/<BR>/gi, "\n");
     return { command, comment };
   };
   const setLine = (command: string, comment: string): boolean => {
-    if (!commentCommandInput || !commentInputTextarea) return false;
+    if (!elements) return false;
     comment = comment
       .replace(/\[A0]/gi, "\u00A0")
       .replace(/\[SP]/gi, "\u3000")
@@ -115,26 +110,27 @@ const OutputBox = (): JSX.Element => {
         "value"
       )?.set;
       if (!nativeInputValueSetter) return false;
-      nativeInputValueSetter.call(commentCommandInput, command);
-      commentCommandInput.dispatchEvent(new Event("change", { bubbles: true }));
-      commentCommandInput.dispatchEvent(new Event("input", { bubbles: true }));
+      nativeInputValueSetter.call(elements.commentCommandInput, command);
+      elements.commentCommandInput.dispatchEvent(
+        new Event("change", { bubbles: true })
+      );
+      elements.commentCommandInput.dispatchEvent(
+        new Event("input", { bubbles: true })
+      );
     }
     const nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor(
       window.HTMLTextAreaElement.prototype,
       "value"
     )?.set;
     if (!nativeTextAreaValueSetter) return false;
-    nativeTextAreaValueSetter.call(commentInputTextarea, comment);
-    commentInputTextarea.dispatchEvent(new Event("input", { bubbles: true }));
+    nativeTextAreaValueSetter.call(elements.commentInputTextarea, comment);
+    elements.commentInputTextarea.dispatchEvent(
+      new Event("input", { bubbles: true })
+    );
     return true;
   };
   const onSetLineClick = useCallback(() => {
-      if (
-        !commentCommandInput ||
-        !commentInputTextarea ||
-        textareaValue.length === 0
-      )
-        return;
+      if (!elements || textareaValue.length === 0) return;
       const content = getCommandAndComment(textareaValue, isReverse);
       if (!content) return;
       if (setLine(content.command, content.comment)) {
@@ -148,14 +144,14 @@ const OutputBox = (): JSX.Element => {
     }, [textareaValue, isReverse]),
     onPostAll = useCallback(() => {
       const postAll = async () => {
-        if (!commentInputTextarea) return;
+        if (!elements) return;
         postAllCancel.current = false;
         const isOwnerMode = !!location.href.match(
             /^https:\/\/www\.nicovideo\.jp\/watch\/[^/]+\/edit\/owner_comment/
           ),
           length = textareaValue.length;
         const timeSpan = Number(
-          localStorage.get(
+          Storage.get(
             isOwnerMode ? "options_timespan_owner" : "options_timespan_main"
           )
         );
@@ -175,7 +171,11 @@ const OutputBox = (): JSX.Element => {
             return;
           }
           await sleep(timeSpan);
-          setSpoilerMessage(`セット中(${i + 1}/${length})`);
+          setSpoilerMessage(
+            `セット中(進行度: ${i + 1}/${length} 文字数: ${
+              content.comment.length
+            })`
+          );
           if (setLine(content.command, content.comment)) {
             if (isReverse) {
               textareaValue.pop();
@@ -183,7 +183,7 @@ const OutputBox = (): JSX.Element => {
               textareaValue.shift();
             }
             await sleep(200);
-            commentInputTextarea.dispatchEvent(
+            elements.commentInputTextarea.dispatchEvent(
               new KeyboardEvent("keydown", {
                 key: "Enter",
                 keyCode: 13,
@@ -193,64 +193,103 @@ const OutputBox = (): JSX.Element => {
               })
             );
             setTextareaValue([...textareaValue]);
-            setSpoilerMessage(`投下しました(${i + 1}/${length})`);
+            setSpoilerMessage(
+              `投下しました(進行度: ${i + 1}/${length} 文字数: ${
+                content.comment.length
+              })`
+            );
           } else {
-            setSpoilerMessage(`セットに失敗しました(${i + 1}/${length})`);
+            setSpoilerMessage(
+              `セットに失敗しました(進行度: ${i + 1}/${length} 文字数: ${
+                content.comment.length
+              })`
+            );
           }
         }
         setIsPosting(false);
       };
       void postAll();
-    }, [textareaValue, commentInputTextarea]),
+    }, [textareaValue, elements]),
     onPostAllCancel = useCallback(() => (postAllCancel.current = true), []),
     toggleIsReverse = useCallback(() => {
       setIsReverse(!isReverse);
-    }, [isReverse]);
+    }, [isReverse]),
+    toggleCommentsDetail = useCallback(() => {
+      setIsShowDetails(!isShowDetails);
+    }, [isShowDetails]);
   if (exportLayer === undefined) return <></>;
   return (
-    <Spoiler text={"Box"} message={spoilerMessage}>
-      <div className={Styles.table}>
-        <div className={Styles.row}>
-          <textarea
-            className={Styles.textarea}
-            value={textareaValue.join("\n")}
-            disabled={isPosting}
-            wrap="off"
-            onChange={(e) => {
-              const data = e.target.value.split(/\r\n|\r|\n/);
-              setTextareaValue(e.target.value === "" ? [] : data);
-            }}
-          ></textarea>
+    <>
+      <Spoiler text={"Box"} message={spoilerMessage}>
+        <div className={Styles.table}>
+          <div className={Styles.row}>
+            <textarea
+              className={Styles.textarea}
+              value={textareaValue.join("\n")}
+              disabled={isPosting}
+              wrap="off"
+              spellCheck={false}
+              onChange={(e) => {
+                const data = e.target.value.split(/\r\n|\r|\n/);
+                setTextareaValue(e.target.value === "" ? [] : data);
+              }}
+            ></textarea>
+          </div>
+          <div className={Styles.row}>
+            <div className={Styles.block}>
+              <Button
+                disabled={isPosting}
+                text="1行セット"
+                click={onSetLineClick}
+              />
+              {isPosting ? (
+                <Button
+                  disabled={!isPosting}
+                  text="キャンセル"
+                  click={onPostAllCancel}
+                />
+              ) : (
+                <Button
+                  disabled={isPosting}
+                  text="全行投下"
+                  click={onPostAll}
+                />
+              )}
+              <Button
+                disabled={isPosting}
+                text="クリア"
+                click={() => setTextareaValue([])}
+              />
+            </div>
+            <div className={Styles.block}>
+              <Button
+                disabled={isPosting}
+                text="逆から"
+                click={toggleIsReverse}
+                active={isReverse}
+              />
+            </div>
+            <div className={Styles.block}>
+              <Button
+                disabled={isPosting}
+                text="コメント詳細"
+                click={toggleCommentsDetail}
+              />
+            </div>
+            <div className={Styles.right}>
+              <p className={Styles.rowMessage}>行数: {textareaValue.length}</p>
+            </div>
+          </div>
         </div>
-        <div className={Styles.row}>
-          <Button
-            disabled={isPosting}
-            text="1行セット"
-            click={onSetLineClick}
-          />
-          {isPosting ? (
-            <Button
-              disabled={!isPosting}
-              text="キャンセル"
-              click={onPostAllCancel}
-            />
-          ) : (
-            <Button disabled={isPosting} text="全行投下" click={onPostAll} />
-          )}
-          <Button
-            disabled={isPosting}
-            text="クリア"
-            click={() => setTextareaValue([])}
-          />
-          <Button
-            disabled={isPosting}
-            text="逆から"
-            click={toggleIsReverse}
-            active={isReverse}
-          />
-        </div>
-      </div>
-    </Spoiler>
+      </Spoiler>
+      {isShowDetails && (
+        <CommentsDetail
+          close={toggleCommentsDetail}
+          textareaValue={textareaValue}
+          isReverse={isReverse}
+        />
+      )}
+    </>
   );
 };
-export default OutputBox;
+export { OutputBox };

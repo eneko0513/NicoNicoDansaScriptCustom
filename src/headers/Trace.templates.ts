@@ -1,28 +1,5 @@
 import { layerTemplates } from "@/@types/types";
 
-/**
- * レイヤーのテンプレート
- * id: 識別名
- * commands: 適用するコマンド
- * pos: 初期位置
- * posList: テンプレが対応している位置
- * text: テンプレート名
- * value: 旧識別名
- * areaWidth: 横幅(px)
- * width: 横幅(全角文字数)
- * height: 行数
- * critical: 臨界幅
- * top: 各位置ごとのtop(px)
- * left: left(px)
- * scale: x/yそれぞれ
- * size: [{
- *   font: font-size(px)
- *   line: line-height(px)
- *   lineCount: 行数
- *   height: height(px)
- *   count: 何回繰り返すか
- * }]
- */
 const Templates: layerTemplates = {
   be9: {
     id: "be9",
@@ -340,7 +317,7 @@ const Templates: layerTemplates = {
     height: 22,
     critical: true,
     top: { ue: 0, naka: 0, shita: 4.8 },
-    left: 14,
+    left: 15,
     scale: { x: 0.952, y: 1 },
     size: [{ font: 12.8, line: 16, lineCount: 1, count: 22, height: 16.2 }],
   },
@@ -355,10 +332,10 @@ const Templates: layerTemplates = {
     width: 37,
     height: 18,
     critical: false,
-    top: { ue: 2, naka: 0, shita: -24.3 },
+    top: { ue: 2, naka: 0, shita: 14.5 },
     left: 7,
-    scale: { x: 1.055, y: 1.04 },
-    size: [{ font: 16, line: 17, lineCount: 2, height: 38.7, count: 9 }],
+    scale: { x: 1.055, y: 1.045 },
+    size: [{ font: 16, line: 17, lineCount: 2, height: 37, count: 9 }],
   },
   s31: {
     id: "s31",
@@ -367,14 +344,14 @@ const Templates: layerTemplates = {
     posList: ["ue"],
     text: "small ue W54",
     value: "small_ue_gothic_W54_C31",
-    areaWidth: 540,
+    areaWidth: 554,
     width: 54,
     height: 31,
     critical: true,
     top: { ue: -1, naka: 0, shita: 0 },
     left: 91,
     scale: { x: 0.826, y: 1 },
-    size: [{ font: 10.2, line: 16, lineCount: 1, height: 16, count: 31 }],
+    size: [{ font: 10.2, line: 16, lineCount: 1, height: 11.5, count: 31 }],
   },
   tm26: {
     id: "tm26",
@@ -435,7 +412,7 @@ const Templates: layerTemplates = {
     width: 27,
     height: 18,
     critical: false,
-    top: { ue: 0, naka: 0, shita: 2 },
+    top: { ue: 0, naka: 0, shita: 3 },
     left: 92,
     scale: { x: 0.887, y: 0.978 },
     size: [
@@ -454,7 +431,7 @@ const Templates: layerTemplates = {
     width: 37,
     height: 18,
     critical: false,
-    top: { ue: 0, naka: 0, shita: 2 },
+    top: { ue: 0, naka: 0, shita: 3 },
     left: 7,
     scale: { x: 0.888, y: 0.978 },
     size: [
@@ -463,4 +440,4 @@ const Templates: layerTemplates = {
     ],
   },
 };
-export default Templates;
+export { Templates };

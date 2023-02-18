@@ -1,15 +1,16 @@
-import React, { useContext } from "react";
-import { context } from "@/components/Context";
+import React from "react";
 import ReactDOM from "react-dom";
-import Memo from "@/memo/Memo";
+import { Memo } from "@/memo/Memo";
+import { useAtom } from "jotai";
+import { elementAtom } from "@/atoms";
 
 /**
  * メモブロック(プレイヤー内)
  * @constructor
  */
 const MemoPortal = (): JSX.Element => {
-  const { MemoElement } = useContext(context);
-  if (!MemoElement) return <></>;
-  return ReactDOM.createPortal(<Memo />, MemoElement);
+  const [elements] = useAtom(elementAtom);
+  if (!elements) return <></>;
+  return ReactDOM.createPortal(<Memo />, elements.MemoElement);
 };
-export default MemoPortal;
+export { MemoPortal };

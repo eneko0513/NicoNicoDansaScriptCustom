@@ -19,4 +19,4 @@ const Tips = (props: TipsProps) => {
     </div>
   );
 };
-export default Tips;
+export { Tips };

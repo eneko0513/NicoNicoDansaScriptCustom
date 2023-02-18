@@ -1,20 +1,21 @@
-import VideoController from "@/main/VideoController";
-import React, { useContext } from "react";
-import { context } from "@/components/Context";
+import { VideoController } from "@/main/VideoController";
+import React from "react";
 import ReactDOM from "react-dom";
+import { useAtom } from "jotai";
+import { elementAtom } from "@/atoms";
 
 /**
  * メインブロック(プレイヤー内)
  * @constructor
  */
 const Main = (): JSX.Element => {
-  const { MainElement } = useContext(context);
-  if (!MainElement) return <></>;
+  const [elements] = useAtom(elementAtom);
+  if (!elements) return <></>;
   return ReactDOM.createPortal(
     <>
       <VideoController />
     </>,
-    MainElement
+    elements.MainElement
   );
 };
-export default Main;
+export { Main };

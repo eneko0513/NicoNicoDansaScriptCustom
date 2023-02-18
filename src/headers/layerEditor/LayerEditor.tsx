@@ -1,24 +1,17 @@
-import React, { ChangeEvent, useCallback, useContext } from "react";
+import React, { ChangeEvent, useCallback } from "react";
 import Styles from "./LayerEditor.module.scss";
-import { layerContext } from "@/components/LayerContext";
-import Button from "@/components/button/Button";
-import styled from "styled-components";
-import typeGuard from "@/libraries/typeGuard";
-
-type colorProps = {
-  bgColor: string;
-};
-const ColorDisplay = styled.label<colorProps>`
-  background-color: ${(props) => props.bgColor};
-`;
+import { Button } from "@/components/button/Button";
+import { typeGuard } from "@/libraries/typeGuard";
+import { ColorPicker } from "@/headers/layerSelector/ColorPicker/ColorPicker";
+import { useAtom } from "jotai";
+import { layerAtom } from "@/atoms";
 
 /**
  * layerの一括編集
  * @constructor
  */
 const LayerEditor = () => {
-  const { layerData, setLayerData } = useContext(layerContext);
-  if (!layerData || !setLayerData) return <></>;
+  const [layerData, setLayerData] = useAtom(layerAtom);
 
   const color = layerData.reduce(
     (pv, layer) =>
@@ -107,18 +100,8 @@ const LayerEditor = () => {
         </div>
         <div className={Styles.block}>
           <div className={Styles.colorInputWrapper}>
-            <ColorDisplay
-              bgColor={color}
-              className={`${Styles.colorInputLabel} ${
-                (color === "" || color === "-") && Styles.invalid
-              }`}
-              htmlFor={Styles.colorInput}
-            />
-            <input
-              type={"color"}
-              value={color === "" || color === "-" ? "#ffffff" : color}
-              id={Styles.colorInput}
-              className={Styles.colorInput}
+            <ColorPicker
+              color={color}
               onChange={changeColor}
               disabled={color === "" || color === "-"}
             />
@@ -134,4 +117,4 @@ const LayerEditor = () => {
     </div>
   );
 };
-export default LayerEditor;
+export { LayerEditor };

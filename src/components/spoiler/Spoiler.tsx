@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Styles from "./Spoiler.module.scss";
-import SpoilerButton from "@/components/spoiler/SpoilerButton";
-import localStorage from "@/libraries/localStorage";
-import typeGuard from "@/libraries/typeGuard";
+import { SpoilerButton } from "@/components/spoiler/SpoilerButton";
+import { Storage } from "@/libraries/localStorage";
+import { typeGuard } from "@/libraries/typeGuard";
 
 type propType = {
   text: string;
@@ -20,11 +20,11 @@ const Spoiler: React.FC<propType> = (props) => {
   const localStorageKey = "display_" + props.text.toLowerCase();
   if (!typeGuard.localStorage.isKey(localStorageKey)) return <></>;
   const [spoilerOpen, setSpoilerOpen] = useState<boolean>(
-    localStorage.get(localStorageKey) == "true"
+    Storage.get(localStorageKey) == "true"
   );
   const changeSpoilerVisibility = (visibility: boolean) => {
     setSpoilerOpen(visibility);
-    localStorage.set(localStorageKey, visibility ? "true" : "false");
+    Storage.set(localStorageKey, visibility ? "true" : "false");
   };
   return (
     <div className={Styles.wrapper}>
@@ -38,4 +38,4 @@ const Spoiler: React.FC<propType> = (props) => {
     </div>
   );
 };
-export default Spoiler;
+export { Spoiler };

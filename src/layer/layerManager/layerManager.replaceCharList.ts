@@ -11,5 +11,6 @@ const replaceCharList: { [key: string]: string } = {
   "4": "\u2004",
   "5": "\u2005",
   "6": "\u2006",
+  a: "\u200A",
 };
-export default replaceCharList;
+export { replaceCharList };

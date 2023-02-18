@@ -9,4 +9,4 @@ const sleep = (time: number) => {
     }, time);
   });
 };
-export default sleep;
+export { sleep };

@@ -2,14 +2,14 @@ import {
   autoSave,
   commentFont,
   commentPos,
-  contextType,
-  layer,
-  layerTemplate,
   localStorageKeys,
   MonoChar,
   ownerComment,
+  contextType,
   ProChar,
 } from "@/@types/types";
+
+import type { layer, layerTemplate } from "@/@types/layer";
 
 /**
  * typeGuard
@@ -136,4 +136,4 @@ const typeVerify = (item: unknown, keys: string[]): boolean => {
   }
   return true;
 };
-export default typeGuard;
+export { typeGuard };

@@ -1,11 +1,11 @@
-import sleep from "@/libraries/sleep";
-import { contextTypeNullable } from "@/@types/types";
+import { sleep } from "@/libraries/sleep";
+import { element } from "@/@types/element";
 
 /**
  * reactマウント用の親要素を取得する
  * @param count {number} リトライ回数
  */
-const getElements = async (count = 0): Promise<contextTypeNullable> => {
+const getElements = async (count = 0): Promise<element> => {
   const videoElement = (
       document.getElementById("MainVideoPlayer") as HTMLDivElement
     )?.getElementsByTagName("video")[0] as HTMLVideoElement,
@@ -64,4 +64,4 @@ const getElements = async (count = 0): Promise<contextTypeNullable> => {
     MemoElement,
   };
 };
-export default getElements;
+export { getElements };

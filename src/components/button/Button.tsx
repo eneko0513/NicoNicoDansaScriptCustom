@@ -55,4 +55,4 @@ const Button = (props: buttonProps) => {
     />
   );
 };
-export default Button;
+export { Button };

@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState } from "react";
-import Spoiler from "@/components/spoiler/Spoiler";
-import localStorage from "@/libraries/localStorage";
+import { Spoiler } from "@/components/spoiler/Spoiler";
+import { Storage } from "@/libraries/localStorage";
 import Styles from "./Memo.module.scss";
 
 /**
@@ -8,12 +8,12 @@ import Styles from "./Memo.module.scss";
  * @constructor
  */
 const Memo = (): JSX.Element => {
-  const [value, setValue] = useState<string>(localStorage.get("memo"));
+  const [value, setValue] = useState<string>(Storage.get("memo"));
   const onChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
       setValue(e.target.value);
     },
     onBlur = () => {
-      localStorage.set("memo", value);
+      Storage.set("memo", value);
     };
   return (
     <Spoiler text={"Memo"}>
@@ -28,4 +28,4 @@ const Memo = (): JSX.Element => {
     </Spoiler>
   );
 };
-export default Memo;
+export { Memo };

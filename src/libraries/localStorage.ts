@@ -1,7 +1,7 @@
 import { localStorageKeys } from "@/@types/types";
 
 const STORAGE_PREFIX = "DanSc";
-import defaultValue from "@/libraries/localStorage.defaultValue";
+import { defaultValue } from "@/libraries/localStorage.defaultValue";
 /**
  * LocalStorage読み書き用ラッパー
  */
@@ -21,4 +21,4 @@ const Storage = {
     localStorage.removeItem(`${STORAGE_PREFIX}_${key}`);
   },
 };
-export default Storage;
+export { Storage };

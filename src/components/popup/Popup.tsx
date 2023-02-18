@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import Styles from "./Popup.module.scss";
-import icons from "@/assets/icons";
+import { icons } from "@/assets/icons";
 
 type PopupProps = {
   children: ReactNode;
@@ -30,4 +30,4 @@ const Popup = (props: PopupProps) => {
     </div>
   );
 };
-export default Popup;
+export { Popup };

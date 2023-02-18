@@ -28,4 +28,4 @@ const time2str = (time: number): string => {
     (time % 60).toFixed(2).padStart(5, "0")
   )}`;
 };
-export default { str2time, time2str };
+export { str2time, time2str };

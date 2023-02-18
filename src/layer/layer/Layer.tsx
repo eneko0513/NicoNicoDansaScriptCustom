@@ -1,14 +1,14 @@
 import styled from "styled-components";
-import React, { ChangeEvent, useContext, useRef } from "react";
-import { layer } from "@/@types/types";
+import React, { ChangeEvent, useRef } from "react";
+import { layer } from "@/@types/layer";
 import Styles from "./Layer.module.scss";
-import { layerContext } from "@/components/LayerContext";
-//import layerManager from "@/libraries/layerManager";
-import grids from "@/assets/grids";
-import replaceCharList from "@/libraries/layerManager.replaceCharList";
+import { grids } from "@/assets/grids";
+import { replaceCharList } from "@/layer/layerManager/layerManager.replaceCharList";
+import { useAtom } from "jotai";
+import { layerAtom, optionAtom } from "@/atoms";
+import { Storage } from "@/libraries/localStorage";
 
 type LayerProps = {
-  id: number;
   data: layer;
 };
 type LayerBoxProps = {
@@ -48,7 +48,8 @@ const LayerInput = styled.textarea<LayerInputProps>`
  * @constructor
  */
 const Layer = (props: LayerProps): JSX.Element => {
-  const { layerData, setLayerData, optionData } = useContext(layerContext),
+  const [layerData, setLayerData] = useAtom(layerAtom),
+    [optionData] = useAtom(optionAtom),
     layerElement = useRef<HTMLDivElement>(null),
     currentLayer = useRef<layer>();
   const onchange = (layer: layer) => {
@@ -59,19 +60,6 @@ const Layer = (props: LayerProps): JSX.Element => {
     currentLayer.current = layer;
     setLayerData([...layerData]);
   };
-  /*useEffect(() => {
-    if (!layerElement.current || !optionData) return;
-    if (!(props.data.layerId === currentLayer.current?.layerId)) {
-      props.data.overwrite = true;
-    }
-    currentLayer.current = props.data;
-    layerManager(
-      props.data,
-      onchange,
-      layerElement.current,
-      optionData.replace
-    );
-  }, [layerElement, layerData, props.data, optionData?.replace]);*/
   const updateData = (e: ChangeEvent<HTMLTextAreaElement>, index: number) => {
     const line = props.data.content[index];
     const char = replaceCharList[(e.nativeEvent as InputEvent).data || ""];
@@ -111,6 +99,10 @@ const Layer = (props: LayerProps): JSX.Element => {
           props.data.selected ? Styles.active : ""
         } ${props.data.visible ? "" : Styles.invisible} ${
           optionData?.grid && grids[props.data.value] ? Styles.grid : ""
+        } ${
+          props.data.selected &&
+          Storage.get("options_showSelectedLayerOnTop") &&
+          Styles.showOnTop
         }`}
         top={props.data.top[props.data.pos]}
         left={props.data.left}
@@ -126,7 +118,7 @@ const Layer = (props: LayerProps): JSX.Element => {
               _height={value.height || value.line * value.lineCount}
               _lineHeight={value.line}
               _fontSize={value.font}
-              key={`layer${props.id}-group${index}`}
+              key={`layer${props.data.layerId}-group${index}`}
               className={Styles.textarea}
               value={value.content.join("\n")}
               onChange={(e) => updateData(e, index)}
@@ -150,14 +142,14 @@ const Layer = (props: LayerProps): JSX.Element => {
             return (
               <LayerItem
                 _height={value.height || value.line * value.lineCount}
-                key={`layerOutline${props.id}-group${index}`}
+                key={`layerOutline${props.data.layerId}-group${index}`}
               >
                 {[...(Array(value.lineCount) as undefined[])].map(
                   (_, index_) => {
                     return (
                       <LayerItem
                         _height={value.line}
-                        key={`layerOutline${props.id}-group${index}-line${index_}`}
+                        key={`layerOutline${props.data.layerId}-group${index}-line${index_}`}
                       />
                     );
                   }
@@ -170,4 +162,4 @@ const Layer = (props: LayerProps): JSX.Element => {
     </>
   );
 };
-export default Layer;
+export { Layer };

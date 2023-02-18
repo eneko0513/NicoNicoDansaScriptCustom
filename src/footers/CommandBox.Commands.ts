@@ -8,7 +8,7 @@ import { commandList } from "@/@types/types";
  * value: 適用されるコマンド dansk:で始まるものはだんすく側で処理する
  * group: 重複できないコマンドごとのグループ
  */
-const Buttons: commandList = [
+const Commands: commandList = [
   [
     [
       {
@@ -218,4 +218,4 @@ const Buttons: commandList = [
     ],
   ],
 ];
-export default Buttons;
+export { Commands };

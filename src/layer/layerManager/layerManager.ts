@@ -1,14 +1,15 @@
-import { layer } from "@/@types/types";
+import { layer } from "@/@types/layer";
 import Styles from "./layerManager.module.scss";
-import replaceCharList from "@/libraries/layerManager.replaceCharList";
-import caretUtil from "@/libraries/caretUtil";
-import typeGuard from "@/libraries/typeGuard";
+import { replaceCharList } from "@/layer/layerManager/layerManager.replaceCharList";
+import { caretUtil } from "@/libraries/caretUtil";
+import { typeGuard } from "@/libraries/typeGuard";
 
 const ua = window.navigator.userAgent,
   isChromium = !!ua.match(/Chrome/),
   isFirefox = !!ua.match(/Firefox/);
 /**
  * レイヤーとイベントハンドラの管理
+ * @deprecated
  * @param data {layer}
  * @param onChange
  * @param targetElement
@@ -274,4 +275,4 @@ const getInnerText = (
   return strings;
 };
 
-export default layerManager;
+export { layerManager };

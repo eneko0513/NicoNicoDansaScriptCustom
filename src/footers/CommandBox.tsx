@@ -1,56 +1,59 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import Spoiler from "@/components/spoiler/Spoiler";
+import React, { useCallback, useEffect, useState } from "react";
+import { Spoiler } from "@/components/spoiler/Spoiler";
 import Styles from "./CommandBox.module.scss";
-import Button from "@/components/button/Button";
-import { context } from "@/components/Context";
+import { Button } from "@/components/button/Button";
 
-import Commands from "./CommandBox.Commands";
-import tg from "@/libraries/typeGuard";
+import { Commands } from "./CommandBox.Commands";
+import { useAtom } from "jotai";
+import { elementAtom } from "@/atoms";
 
 /**
  * コマンドパレット
  * @constructor
  */
 const CommandBox = () => {
-  const { commentCommandInput, commentInputTextarea } = useContext(context),
+  const [elements] = useAtom(elementAtom),
     [commands, setCommands] = useState<string[]>([]);
   const commandOnChange = () => {
-    if (commentCommandInput && commands.join(" ") !== commentCommandInput.value)
+    if (
+      elements &&
+      elements.commentCommandInput &&
+      commands.join(" ") !== elements.commentCommandInput.value
+    )
       setCommands(
-        commentCommandInput.value.split(" ").filter((str) => str !== "")
+        elements.commentCommandInput.value
+          .split(" ")
+          .filter((str) => str !== "")
       );
   };
   useEffect(() => {
-    if (commentCommandInput) {
-      commentCommandInput.addEventListener("change", commandOnChange);
+    if (elements) {
+      elements.commentCommandInput.addEventListener("change", commandOnChange);
     }
     return () => {
-      commentCommandInput?.removeEventListener("change", commandOnChange);
+      elements?.commentCommandInput.removeEventListener(
+        "change",
+        commandOnChange
+      );
     };
-  }, [commentCommandInput, commands]);
+  }, [elements, commands]);
   const update = useCallback(
     (value: string) => {
-      if (
-        !(
-          tg.context.commentCommandInput(commentCommandInput) &&
-          tg.context.commentInputTextarea(commentInputTextarea)
-        )
-      )
-        return;
+      if (!elements) return;
       const command = value.match(/^dansk:(.*)$/);
       let currentCommands = commands;
       if (command) {
         switch (command[1]) {
           case "deleteCommand":
-            commentCommandInput.value = "";
-            commentCommandInput.dispatchEvent(
+            elements.commentCommandInput.value = "";
+            elements.commentCommandInput.dispatchEvent(
               new Event("change", { bubbles: true })
             );
             setCommands([]);
             break;
           case "deleteComment":
-            commentInputTextarea.value = "";
-            commentInputTextarea.dispatchEvent(
+            elements.commentInputTextarea.value = "";
+            elements.commentInputTextarea.dispatchEvent(
               new Event("change", { bubbles: true })
             );
             break;
@@ -58,8 +61,8 @@ const CommandBox = () => {
             break;
         }
       } else {
-        if (currentCommands.join(" ") !== commentCommandInput.value)
-          currentCommands = commentCommandInput.value
+        if (currentCommands.join(" ") !== elements.commentCommandInput.value)
+          currentCommands = elements.commentCommandInput.value
             .split(" ")
             .filter((str) => str !== "");
         if (commands.includes(value)) {
@@ -73,15 +76,15 @@ const CommandBox = () => {
           );
           currentCommands = [...currentCommands, value];
         }
-        commentCommandInput.value = currentCommands.join(" ");
-        commentCommandInput.dispatchEvent(
+        elements.commentCommandInput.value = currentCommands.join(" ");
+        elements.commentCommandInput.dispatchEvent(
           new Event("change", { bubbles: true })
         );
         setCommands(currentCommands);
       }
       return;
     },
-    [commands, commentCommandInput]
+    [commands, elements]
   );
 
   return (
@@ -144,4 +147,4 @@ const getItemsFromGroup = (group: string): string[] => {
   }
   return result;
 };
-export default CommandBox;
+export { CommandBox };

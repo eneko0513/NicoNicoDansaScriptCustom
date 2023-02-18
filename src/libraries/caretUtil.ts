@@ -1,4 +1,4 @@
-import typeGuard from "@/libraries/typeGuard";
+import { typeGuard } from "@/libraries/typeGuard";
 
 const caretUtil = {
   /**
@@ -66,4 +66,4 @@ const caretUtil = {
     selection.addRange(range);
   },
 };
-export default caretUtil;
+export { caretUtil };

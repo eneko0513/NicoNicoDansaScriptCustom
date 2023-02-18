@@ -1,15 +1,16 @@
-import React, { useContext } from "react";
-import { context } from "@/components/Context";
+import React from "react";
 import ReactDOM from "react-dom";
-import LayerContainer from "@/layer/LayerContainer";
+import { LayerContainer } from "@/layer/LayerContainer";
+import { useAtom } from "jotai";
+import { elementAtom } from "@/atoms";
 
 /**
  * レイヤーブロック(プレイヤー内)
  * @constructor
  */
 const LayerPortal = (): JSX.Element => {
-  const { LayerElement } = useContext(context);
-  if (!LayerElement) return <></>;
-  return ReactDOM.createPortal(<LayerContainer />, LayerElement);
+  const [elements] = useAtom(elementAtom);
+  if (!elements) return <></>;
+  return ReactDOM.createPortal(<LayerContainer />, elements.LayerElement);
 };
-export default LayerPortal;
+export { LayerPortal };

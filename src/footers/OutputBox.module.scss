@@ -9,5 +9,18 @@
   .row {
     display: flex;
     flex-direction: row;
+    .block:not(:last-child) {
+      margin-right: 20px;
+    }
+    .right {
+      margin-left: auto;
+    }
   }
+}
+
+.rowMessage {
+  margin-right: 10px;
+  font-size: 16px;
+  margin-top: 5px;
+  user-select: none;
 }
