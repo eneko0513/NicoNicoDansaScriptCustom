@@ -87,6 +87,12 @@ const defaultValue: localStorageDefaultValues = {
     dangerous: false,
     type: "boolean",
   },
+  options_addDatetimeToFilename: {
+    defaultValue: "false",
+    description: "現在時刻をファイル名に追加",
+    dangerous: false,
+    type: "boolean",
+  },
   display_trace: {
     defaultValue: "true",
   },

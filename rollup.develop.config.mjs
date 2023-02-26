@@ -23,6 +23,7 @@ const plugins = [
 		'process.env.NODE_ENV': JSON.stringify( 'development' ),
 	}),
 	babel({
+		babelHelpers: 'bundled',
 		presets: ["@babel/preset-react"],
 	}),
 	commonjs(),

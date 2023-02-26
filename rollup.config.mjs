@@ -24,6 +24,7 @@ const plugins = [
 		'process.env.NODE_ENV': JSON.stringify('production'),
 	}),
 	babel({
+		babelHelpers: 'bundled',
 		presets: ["@babel/preset-react"],
 	}),
 	commonjs(),

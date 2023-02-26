@@ -54,7 +54,8 @@ const Trace = () => {
         !typeGuard.localStorage.isAutoSave(data) ||
         !layerDataRef.current ||
         layerDataRef.current.length < 1 ||
-        JSON.stringify(layerDataRef.current) === JSON.stringify(data.at(-1))
+        JSON.stringify(layerDataRef.current) ===
+          JSON.stringify(data.at(-1)?.data)
       )
         return;
       data.push({ data: layerDataRef.current, timestamp: Date.now() });
@@ -212,7 +213,11 @@ const Trace = () => {
       }
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
-      link.download = `${fileName}.dansk.json`;
+      link.download = `${fileName}${
+        Storage.get("options_addDatetimeToFilename") === "true"
+          ? new Date().toISOString().slice(0, -5).replace(/[-T:]/g, "")
+          : ""
+      }.dansk.json`;
       link.click();
     }, [layerData]),
     loadFromAutoSave = useCallback(() => {

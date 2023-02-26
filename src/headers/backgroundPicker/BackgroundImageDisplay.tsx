@@ -4,12 +4,16 @@ import { icons } from "@/assets/icons";
 import { useAtom } from "jotai";
 import { backgroundAtom } from "@/atoms";
 
+type props = {
+  setImageCrop: (key: number) => void;
+};
+
 /**
  * 背景の選択画面
  * 有効無効の切り替えとか画像の削除とかも
  * @constructor
  */
-const BackgroundImageDisplay = () => {
+const BackgroundImageDisplay = ({ setImageCrop }: props) => {
   const [background, setBackground] = useAtom(backgroundAtom);
   const deleteImage = (key: number) => {
     background.images.splice(key, 1);
@@ -27,24 +31,31 @@ const BackgroundImageDisplay = () => {
     }
     setBackground({ ...background });
   };
+
+  const cropImage = (index: number) => {
+    setImageCrop(index);
+  };
   return (
     <div className={Styles.container}>
-      {background.images.map((blob, key) => {
+      {background.images.map((image, key) => {
         return (
           <div
-            key={`backgroundImageDisplay${key}`}
+            key={`backgroundImageDisplay${image.id}`}
             className={`${Styles.item} ${
               key === background.selected ? Styles.active : ""
             }`}
           >
             <img
               className={Styles.image}
-              src={blob}
+              src={image.url}
               alt={""}
               onClick={() => changeActiveImage(key)}
             />
             <span className={Styles.delete} onClick={() => deleteImage(key)}>
               {icons.delete}
+            </span>
+            <span className={Styles.crop} onClick={() => cropImage(key)}>
+              {icons.crop}
             </span>
           </div>
         );

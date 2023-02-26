@@ -31,5 +31,5 @@ jobs:
     - name: UploadZip
       run: | 
         echo '${GITHUB_REF##*/}'
-        curl -X POST -F 'payload_json={"content": "新しいバージョンのリリースのお知らせです😎\rバージョン：'${GITHUB_REF##*/}'\rご意見・ご要望は #ツール・スクリプト関連チャンネル にお願いします"}' -F "file1=@${GITHUB_REF##*/}.zip" "https://discord.com/api/webhooks/1000620069820309595/6SJxaZVl_lH456RuCF7ZUoGJ8Wn0Qo4e_2AuGVJoa_CWTPOpFaLH1kjNSPpHjYp9cF1o"
+        curl -X POST -F 'payload_json={"content": "新しいバージョンのリリースのお知らせです😎\rバージョン：'${GITHUB_REF##*/}'\rご意見・ご要望は <#441986140179005440> にお願いします"}' -F "file1=@${GITHUB_REF##*/}.zip" "https://discord.com/api/webhooks/1000620069820309595/6SJxaZVl_lH456RuCF7ZUoGJ8Wn0Qo4e_2AuGVJoa_CWTPOpFaLH1kjNSPpHjYp9cF1o"
     

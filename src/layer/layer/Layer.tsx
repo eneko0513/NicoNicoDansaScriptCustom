@@ -101,7 +101,7 @@ const Layer = (props: LayerProps): JSX.Element => {
           optionData?.grid && grids[props.data.value] ? Styles.grid : ""
         } ${
           props.data.selected &&
-          Storage.get("options_showSelectedLayerOnTop") &&
+          Storage.get("options_showSelectedLayerOnTop") === "true" &&
           Styles.showOnTop
         }`}
         top={props.data.top[props.data.pos]}

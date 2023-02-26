@@ -8,8 +8,9 @@
   border: solid 1px black;
   padding: 5px;
   .item {
-    width: calc(50% - 12px);
+    max-width: calc(50% - 12px);
     height: 50%;
+    aspect-ratio: 16/9;
     position: relative;
     border: solid 1px;
     background-color: #777777;
@@ -23,16 +24,23 @@
       height: 100%;
       object-fit: contain;
     }
-    .delete {
+    .delete,
+    .crop {
       position: absolute;
-      top: 0;
-      right: 0;
       transform: translate(50%, -50%);
       width: 20px;
       height: 20px;
       border-radius: 50%;
       background-color: #f4f4f4;
       border: solid 1px black;
+    }
+    .delete {
+      top: 0;
+      right: 0;
+    }
+    .crop {
+      top: 30px;
+      right: 0;
     }
   }
 }

@@ -56,7 +56,6 @@ const LayerContainer = (): JSX.Element => {
       return;
     const target = targetNode.current.parentElement.parentElement;
     setScale({ x: target.clientWidth / 640, y: target.clientHeight / 360 });
-    console.log(target);
   };
   const [observer] = useState<MutationObserver>(
       new MutationObserver(observerCallback)
@@ -83,7 +82,7 @@ const LayerContainer = (): JSX.Element => {
         ? ReactDOM.createPortal(
             <BackgroundImage
               className={`${Styles.backgroundImage}`}
-              src={background.images[background.selected]}
+              src={background.images[background.selected]?.url}
               alt={"backgroundImage"}
               mode={background.mode}
               opacity={background.transparency / 100}

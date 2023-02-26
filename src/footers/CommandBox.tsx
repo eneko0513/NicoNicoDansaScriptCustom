@@ -6,6 +6,10 @@ import { Button } from "@/components/button/Button";
 import { Commands } from "./CommandBox.Commands";
 import { useAtom } from "jotai";
 import { elementAtom } from "@/atoms";
+import {
+  updateReactHTMLInput,
+  updateReactHTMLTextArea,
+} from "@/libraries/elementUtil";
 
 /**
  * コマンドパレット
@@ -45,17 +49,11 @@ const CommandBox = () => {
       if (command) {
         switch (command[1]) {
           case "deleteCommand":
-            elements.commentCommandInput.value = "";
-            elements.commentCommandInput.dispatchEvent(
-              new Event("change", { bubbles: true })
-            );
+            updateReactHTMLInput(elements.commentCommandInput, "");
             setCommands([]);
             break;
           case "deleteComment":
-            elements.commentInputTextarea.value = "";
-            elements.commentInputTextarea.dispatchEvent(
-              new Event("change", { bubbles: true })
-            );
+            updateReactHTMLTextArea(elements.commentInputTextarea, "");
             break;
           default:
             break;
@@ -76,13 +74,12 @@ const CommandBox = () => {
           );
           currentCommands = [...currentCommands, value];
         }
-        elements.commentCommandInput.value = currentCommands.join(" ");
-        elements.commentCommandInput.dispatchEvent(
-          new Event("change", { bubbles: true })
+        updateReactHTMLInput(
+          elements.commentCommandInput,
+          currentCommands.join(" ")
         );
         setCommands(currentCommands);
       }
-      return;
     },
     [commands, elements]
   );

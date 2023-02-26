@@ -8,6 +8,15 @@ import { Tips } from "@/components/tips/Tips";
 import Styles from "./BackgroundPicker.module.scss";
 import { useAtom } from "jotai";
 import { backgroundAtom } from "@/atoms";
+import { uuid } from "@/libraries/uuidUtil";
+import { ImageCrop } from "@/headers/backgroundPicker/imageCrop/ImageCrop";
+
+const createImage = (url: string) => {
+  return {
+    id: uuid(),
+    url,
+  };
+};
 
 /**
  * 背景の追加、選択、描画モード選択
@@ -18,7 +27,8 @@ const BackgroundPicker = () => {
   const [urlInputActive, setUrlInputActive] = useState<boolean>(false),
     [urlInputValue, setUrlInputValue] = useState<string>(""),
     [colorInputActive, setColorInputActive] = useState<boolean>(false),
-    [colorInputValue, setColorInputValue] = useState<string>("#000000");
+    [colorInputValue, setColorInputValue] = useState<string>("#000000"),
+    [imageCrop, setImageCrop] = useState<number>(-1);
   const addColorBg = () => {
     setColorInputActive(false);
     const color = colorInputValue,
@@ -31,7 +41,7 @@ const BackgroundPicker = () => {
     context.fillRect(0, 0, 1920, 1080);
     canvas.toBlob((blob) => {
       if (!blob) return;
-      background.images.push(URL.createObjectURL(blob));
+      background.images.push(createImage(URL.createObjectURL(blob)));
       setBackground({ ...background });
     });
   };
@@ -43,7 +53,7 @@ const BackgroundPicker = () => {
         const reader = new FileReader();
         reader.onload = (e) => {
           if (typeof e.target?.result === "string") {
-            background.images.push(e.target.result);
+            background.images.push(createImage(e.target.result));
             setBackground({ ...background });
           }
         };
@@ -55,7 +65,7 @@ const BackgroundPicker = () => {
       if (
         urlInputValue.match(/^https?:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+$/)
       ) {
-        background.images.push(urlInputValue);
+        background.images.push(createImage(urlInputValue));
         setBackground({ ...background });
         setUrlInputValue("");
         setUrlInputActive(false);
@@ -75,7 +85,7 @@ const BackgroundPicker = () => {
         title={"背景"}
         close={() => setBackground({ ...background, open: false })}
       >
-        <BackgroundImageDisplay />
+        <BackgroundImageDisplay setImageCrop={setImageCrop} />
         <div>
           <Button click={loadFromFile} text={"画像をパソコンから読み込む"} />
           <Button
@@ -170,6 +180,11 @@ const BackgroundPicker = () => {
             type={"color"}
           />
           <Button click={addColorBg} text={"追加"} />
+        </Popup>
+      )}
+      {imageCrop >= 0 && (
+        <Popup title={"切り抜き"} close={() => setImageCrop(-1)}>
+          <ImageCrop imageId={imageCrop} close={() => setImageCrop(-1)} />
         </Popup>
       )}
     </>
