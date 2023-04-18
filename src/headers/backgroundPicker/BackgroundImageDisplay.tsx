@@ -35,6 +35,16 @@ const BackgroundImageDisplay = ({ setImageCrop }: props) => {
   const cropImage = (index: number) => {
     setImageCrop(index);
   };
+
+  const download = (index: number) => {
+    const image = background.images[index];
+    if (!image) return;
+    const link = document.createElement("a");
+    link.href = image.url;
+    link.download = `${image.id}.png`;
+    link.click();
+  };
+
   return (
     <div className={Styles.container}>
       {background.images.map((image, key) => {
@@ -56,6 +66,9 @@ const BackgroundImageDisplay = ({ setImageCrop }: props) => {
             </span>
             <span className={Styles.crop} onClick={() => cropImage(key)}>
               {icons.crop}
+            </span>
+            <span className={Styles.download} onClick={() => download(key)}>
+              {icons.download}
             </span>
           </div>
         );

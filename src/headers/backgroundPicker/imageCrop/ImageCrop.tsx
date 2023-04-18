@@ -84,11 +84,40 @@ const ImageCrop = ({ imageId, close }: props) => {
       });
     };
   };
+
+  const scaling = (mode: "shrink" | "expand") => {
+    const currentWidth = range._pos2X - range._pos1X,
+      currentHeight = range._pos2Y - range._pos1Y;
+    const targetScale = Math[mode === "shrink" ? "min" : "max"](
+      currentWidth,
+      currentHeight
+    );
+    const targetWidth = targetScale,
+      targetHeight = targetScale;
+    const _pos1X = (currentWidth - targetWidth) / 2 + range._pos1X,
+      _pos1Y = (currentHeight - targetHeight) / 2 + range._pos1Y;
+    const _pos2X = _pos1X + targetWidth,
+      _pos2Y = _pos1Y + targetHeight;
+    setRange({ _pos1X, _pos1Y, _pos2X, _pos2Y });
+  };
+
   return (
     <div className={Styles.wrapper}>
       <div>
         <Button click={reset} text={"リセット"} />
         <Button click={save} text={"保存"} />
+        <Button
+          click={() => {
+            scaling("shrink");
+          }}
+          text={"16:9に縮小"}
+        />
+        <Button
+          click={() => {
+            scaling("expand");
+          }}
+          text={"16:9に拡大"}
+        />
       </div>
       <div className={Styles.container}>
         <Crop update={updateCropRange} range={range} />

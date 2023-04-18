@@ -13,17 +13,15 @@ import { layerAtom } from "@/atoms";
 const LayerEditor = () => {
   const [layerData, setLayerData] = useAtom(layerAtom);
 
-  const color = layerData.reduce(
-    (pv, layer) =>
-      layer.selected
-        ? pv === ""
-          ? layer.color
-          : pv === layer.color
-          ? pv
-          : "-"
-        : pv,
-    ""
-  );
+  const color = layerData.reduce((pv, layer) => {
+    if (layer.selected) {
+      if (pv === "" || pv === layer.color) {
+        return layer.color;
+      }
+      return "#000000";
+    }
+    return pv;
+  }, "");
   const changePos = useCallback(
       (target: string) => {
         if (!typeGuard.trace.commentPos(target)) return;
@@ -103,7 +101,7 @@ const LayerEditor = () => {
             <ColorPicker
               color={color}
               onChange={changeColor}
-              disabled={color === "" || color === "-"}
+              disabled={color === ""}
             />
           </div>
         </div>

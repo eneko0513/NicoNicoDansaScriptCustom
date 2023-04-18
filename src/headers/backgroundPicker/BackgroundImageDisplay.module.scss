@@ -25,7 +25,8 @@
       object-fit: contain;
     }
     .delete,
-    .crop {
+    .crop,
+    .download {
       position: absolute;
       transform: translate(50%, -50%);
       width: 20px;
@@ -33,14 +34,19 @@
       border-radius: 50%;
       background-color: #f4f4f4;
       border: solid 1px black;
+      right: 0;
+      svg {
+        transform: scale(70%);
+      }
     }
     .delete {
       top: 0;
-      right: 0;
     }
     .crop {
       top: 30px;
-      right: 0;
+    }
+    .download {
+      top: 60px;
     }
   }
 }

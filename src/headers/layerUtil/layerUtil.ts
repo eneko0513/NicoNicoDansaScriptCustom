@@ -258,16 +258,13 @@ const replaceSpace = (input: string, mode = 0) => {
  * TABモード時用? 全角空白2 -> TAB
  * @param input
  */
-const space2tab = (input: string[]): string[] => {
-  input = input.map((value) => {
-    value = value.replace(/\u2003{2}/g, "\u0009");
-    /**
-     * [tb]u200bの互換性が怪しいので一旦無効化
-     * */
-    //if (value.match(/\u0009$/)) value += "\u200b";
-    return value;
+const spaceArr2TabArr = (input: string[]): string[] => {
+  return input.map((value) => {
+    return space2tab(value);
   });
-  return input;
+};
+const space2tab = (input: string): string => {
+  return input.replace(/\u2003{2}/g, "\u0009");
 };
 /**
  * コメントの横幅取得
@@ -519,6 +516,7 @@ const comment2str = (
         lineWidth.width === 0
       )
         continue;
+      if (replaceTab) commentLine = space2tab(commentLine);
       //各行をコメントに足せるか確認していく
       for (const item of output) {
         //最終行の場合、\uA001が要らなくなるので
@@ -538,6 +536,7 @@ const comment2str = (
       //どのコメントにも足せなかった場合
       commentLine = addTrailingSpace(commentLine, width - lineWidth.width);
       if (layer.drWidth) commentLine = addDRSpace(commentLine, layer.drWidth);
+      if (replaceTab) commentLine = space2tab(commentLine);
       let template: string[] = comment.map((_, index, array) =>
         index === array.length - 1 ? "\uA001" : ""
       );
@@ -561,7 +560,7 @@ const comment2str = (
     }
     result.push(
       ...output.map((value) =>
-        (replaceTab ? space2tab(value.content) : value.content)
+        (replaceTab ? spaceArr2TabArr(value.content) : value.content)
           .join("<br>")
           .replace(/\uA001/g, "[03]")
           .replace(/\u0009/g, "[tb]")

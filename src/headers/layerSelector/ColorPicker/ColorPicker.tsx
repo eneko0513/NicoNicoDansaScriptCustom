@@ -25,6 +25,21 @@ const HoverItem = styled.div<pos>`
   top: ${(props) => props.y}px;
 `;
 
+const convert6digitHexColorCode = (color: string) => {
+  if (color.length === 4) {
+    const match = color.match(/#([0-9a-f])([0-9a-f])([0-9a-f])/i);
+    if (!match) {
+      return "#000000";
+    }
+    return `#${match[1]?.repeat(2)}${match[2]?.repeat(2)}${match[3]?.repeat(
+      2
+    )}`;
+  } else if (color.length === 7) {
+    return color;
+  }
+  return "#000000";
+};
+
 const ColorPicker = ({ color, disabled, onChange }: props) => {
   const colorDisplayRef = useRef<HTMLLabelElement>(null);
   const [pos, setPos] = useState<{ x: number; y: number; height: number }>({
@@ -32,9 +47,11 @@ const ColorPicker = ({ color, disabled, onChange }: props) => {
     y: 0,
     height: 0,
   });
+  const [colorInputText, setColorInputText] = useState(color);
   const [colorInput, setColorInput] = useState(color);
 
   useEffect(() => {
+    setColorInputText(color);
     setColorInput(color);
   }, [color]);
 
@@ -45,8 +62,11 @@ const ColorPicker = ({ color, disabled, onChange }: props) => {
 
   const update = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setColorInput(value);
-    if (value.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i)) onChange(e);
+    setColorInputText(value);
+    if (value.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i)) {
+      onChange(e);
+      setColorInput(value);
+    }
   };
 
   useEffect(() => {
@@ -62,18 +82,20 @@ const ColorPicker = ({ color, disabled, onChange }: props) => {
         ref={colorDisplayRef}
         onMouseEnter={onClick}
       >
-        <input
-          className={Styles.colorInput}
-          type="color"
-          onChange={(e) => onChange(e)}
-          disabled={disabled}
-          value={colorInput}
-        />
+        {!disabled && colorInput && (
+          <input
+            className={Styles.colorInput}
+            type="color"
+            onChange={(e) => onChange(e)}
+            disabled={disabled}
+            value={convert6digitHexColorCode(colorInput)}
+          />
+        )}
       </ColorDisplay>
       <HoverItem x={pos.x} y={pos.y + pos.height} className={Styles.hoverItem}>
         <input
           type="text"
-          value={colorInput}
+          value={colorInputText}
           onChange={update}
           className={Styles.input}
           pattern={"^#([0-9a-fA-Z]{3}|[0-9a-fA-Z]{6})$"}

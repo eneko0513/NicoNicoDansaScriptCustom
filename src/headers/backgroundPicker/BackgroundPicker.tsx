@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, ChangeEvent } from "react";
 import { Popup } from "@/components/popup/Popup";
 import { BackgroundImageDisplay } from "@/headers/backgroundPicker/BackgroundImageDisplay";
 import { Button } from "@/components/button/Button";
@@ -10,6 +10,7 @@ import { useAtom } from "jotai";
 import { backgroundAtom } from "@/atoms";
 import { uuid } from "@/libraries/uuidUtil";
 import { ImageCrop } from "@/headers/backgroundPicker/imageCrop/ImageCrop";
+import styled from "styled-components";
 
 const createImage = (url: string) => {
   return {
@@ -17,6 +18,16 @@ const createImage = (url: string) => {
     url,
   };
 };
+
+type ColorDisplayProps = {
+  color: string;
+};
+
+const ColorDisplay = styled.label.attrs<ColorDisplayProps>((p) => ({
+  style: {
+    background: p.color,
+  },
+}))<ColorDisplayProps>``;
 
 /**
  * 背景の追加、選択、描画モード選択
@@ -28,6 +39,7 @@ const BackgroundPicker = () => {
     [urlInputValue, setUrlInputValue] = useState<string>(""),
     [colorInputActive, setColorInputActive] = useState<boolean>(false),
     [colorInputValue, setColorInputValue] = useState<string>("#000000"),
+    [colorInputTextValue, setColorInputTextValue] = useState<string>("#000000"),
     [imageCrop, setImageCrop] = useState<number>(-1);
   const addColorBg = () => {
     setColorInputActive(false);
@@ -79,6 +91,23 @@ const BackgroundPicker = () => {
     },
     [background]
   );
+
+  const onColorInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setColorInputValue(e.target.value);
+    setColorInputTextValue(e.target.value);
+  };
+
+  const onColorTextInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log(
+      e.target.value,
+      e.target.value.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i)
+    );
+    setColorInputTextValue(e.target.value);
+    if (e.target.value.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i)) {
+      setColorInputValue(e.target.value);
+    }
+  };
+
   return (
     <>
       <Popup
@@ -173,12 +202,26 @@ const BackgroundPicker = () => {
             setColorInputActive(false);
           }}
         >
-          <input
-            className={Styles.urlInput}
-            value={colorInputValue}
-            onChange={(e) => setColorInputValue(e.target.value)}
-            type={"color"}
-          />
+          <div className={Styles.colorInputs}>
+            <ColorDisplay
+              color={colorInputValue}
+              className={Styles.colorInputLabel}
+            >
+              <input
+                className={Styles.colorInput}
+                value={colorInputValue}
+                onChange={onColorInputChange}
+                type={"color"}
+              />
+            </ColorDisplay>
+            <input
+              className={Styles.textInput}
+              value={colorInputTextValue}
+              onChange={onColorTextInputChange}
+              pattern={"^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"}
+              type={"text"}
+            />
+          </div>
           <Button click={addColorBg} text={"追加"} />
         </Popup>
       )}
