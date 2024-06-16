@@ -232,6 +232,9 @@ const OutputBox: FC = () => {
                 const data = e.target.value.split(/\r\n|\r|\n/);
                 setTextareaValue(e.target.value === "" ? [] : data);
               }}
+              onKeyDown={(e) => {
+                e.stopPropagation();
+              }}
             ></textarea>
           </div>
           <div className={Styles.row}>

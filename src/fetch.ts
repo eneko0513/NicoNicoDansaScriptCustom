@@ -74,4 +74,33 @@ const injectFetch = () => {
   };
 };
 
-export { injectFetch };
+const injectFetchTmp = () => {
+  const originalFetch = window.fetch;
+  window.fetch = (
+    input: URL | RequestInfo,
+    init?: RequestInit | undefined,
+  ): Promise<Response> => {
+    try {
+      const url = input instanceof Request ? input.url : input.toString();
+      const urlPattern184 =
+        /^https:\/\/nvapi\.nicovideo\.jp\/v1\/tmp\/comments\/sm\d+.*$/;
+      if (
+        urlPattern184.test(url) &&
+        init?.method === "POST" &&
+        init?.body instanceof URLSearchParams
+      ) {
+        const message = init.body.get("message");
+        if (message !== null) {
+          const newMessage = message.replace(/<br>/g, "\n");
+          init.body.set("message", newMessage);
+        }
+        return originalFetch(input, init);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    return originalFetch(input, init);
+  };
+};
+
+export { injectFetch, injectFetchTmp };

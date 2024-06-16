@@ -64,4 +64,71 @@ const getElements = async (count = 0): Promise<TElement> => {
     MemoElement,
   };
 };
-export { getElements };
+
+/**
+ * reactマウント用の親要素を取得する
+ * @param count {number} リトライ回数
+ */
+const getElementsTmp = async (count = 0): Promise<TElement> => {
+  const mainContainer = document.getElementsByTagName("main")[0]
+    ?.children[0] as HTMLDivElement;
+  const videoElement = document
+      .querySelector("div[data-name=content]")
+      ?.getElementsByTagName("video")[0] as HTMLVideoElement,
+    commentCommandInput = mainContainer?.querySelector(
+      "input[placeholder=コマンド]",
+    ) as HTMLInputElement,
+    commentInputTextarea = mainContainer?.querySelector(
+      "textarea[placeholder=コメント]",
+    ) as HTMLTextAreaElement,
+    videoSymbolContainerCanvas = mainContainer?.querySelector(
+      "div[data-name=comment]",
+    ) as HTMLCanvasElement,
+    HeaderElement = document.getElementById(
+      "dansk:HeaderElement",
+    ) as HTMLDivElement,
+    MainElement = document.getElementById(
+      "dansk:MainElement",
+    ) as HTMLDivElement,
+    BackgroundImageElement = document.getElementById(
+      "dansk:BackgroundImageElement",
+    ) as HTMLDivElement,
+    FooterElement = document.getElementById(
+      "dansk:FooterElement",
+    ) as HTMLDivElement,
+    LayerElement = document.getElementById(
+      "dansk:LayerElement",
+    ) as HTMLDivElement,
+    MemoElement = document.getElementById(
+      "dansk:MemoElement",
+    ) as HTMLDivElement;
+  if (
+    !(
+      videoElement &&
+      commentCommandInput &&
+      videoSymbolContainerCanvas &&
+      BackgroundImageElement
+    )
+  ) {
+    //1分超えたらfail
+    if (count > 120) {
+      throw new Error("fail to get mount point");
+    }
+    await sleep(500);
+    return await getElements(count + 1);
+  }
+  return {
+    videoElement,
+    commentCommandInput,
+    commentInputTextarea,
+    videoSymbolContainerCanvas,
+    HeaderElement,
+    MainElement,
+    BackgroundImageElement,
+    FooterElement,
+    LayerElement,
+    MemoElement,
+  };
+};
+
+export { getElements, getElementsTmp };
