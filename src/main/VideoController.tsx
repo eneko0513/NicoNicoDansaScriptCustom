@@ -29,12 +29,15 @@ const VideoController: FC = () => {
     if (time > window.__videoplayer.duration())
       time = window.__videoplayer.duration();
     window.__videoplayer.currentTime(Math.floor(time * 100) / 100 + 0.001);
-    if (
-      document.getElementsByClassName("CommentOnOffButton-iconHide").length > 0
-    ) {
+    if (commentOnOffButton) {
+      if (
+        document.getElementsByClassName("CommentOnOffButton-iconHide").length >
+        0
+      ) {
+        commentOnOffButton.click();
+      }
       commentOnOffButton.click();
     }
-    commentOnOffButton.click();
     setIsSeeking(false);
   };
   const onInputChange = useCallback(
