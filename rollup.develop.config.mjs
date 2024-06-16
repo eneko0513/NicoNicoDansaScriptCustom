@@ -42,9 +42,27 @@ export default [
 		plugins: plugins,
 	},
 	{
+		input: 'src/index_tmp.ts',
+		output: {
+			file: `dist/index_tmp.js`,
+			format: 'umd',
+			name: 'DanSukuMizu'
+		},
+		plugins: plugins,
+	},
+	{
 		input: 'src/Root.tsx',
 		output: {
 			file: `dist/main.js`,
+			format: 'umd',
+			name: 'DanSukuMizu'
+		},
+		plugins: plugins,
+	},
+	{
+		input: 'src/Root_tmp.tsx',
+		output: {
+			file: `dist/main_tmp.js`,
 			format: 'umd',
 			name: 'DanSukuMizu'
 		},

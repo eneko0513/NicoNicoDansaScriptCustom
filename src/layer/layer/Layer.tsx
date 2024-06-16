@@ -139,6 +139,9 @@ const Layer: FC<LayerProps> = (props) => {
               spellCheck={false}
               wrap={"off"}
               onScroll={(e) => (e.target as HTMLTextAreaElement).scroll(0, 0)}
+              onKeyDown={(e) => {
+                e.stopPropagation();
+              }}
             />
           );
         })}
