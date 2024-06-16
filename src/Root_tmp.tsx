@@ -197,7 +197,7 @@ const init = async () => {
     commentInput.after(commentTextarea);
     const originalPostBtnClick = postBtnElement.onclick;
     postBtnElement.onclick = (ev) => {
-      commentInput.value = commentTextarea.value.replace(/\n/g, "<br>");
+      commentInput.value = commentTextarea.value.replace(/\n/g, "ᜀ");
       originalPostBtnClick?.call(postBtnElement, ev);
       commentTextarea.value = "";
     };

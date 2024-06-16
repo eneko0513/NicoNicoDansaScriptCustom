@@ -91,7 +91,7 @@ const injectFetchTmp = () => {
       ) {
         const message = init.body.get("message");
         if (message !== null) {
-          const newMessage = message.replace(/<br>/g, "\n");
+          const newMessage = message.replace(/ᜀ/g, "\n");
           init.body.set("message", newMessage);
         }
         return originalFetch(input, init);
