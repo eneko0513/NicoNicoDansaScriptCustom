@@ -25,6 +25,11 @@ Created By @Negima1072, @eneko0513 and @xpadev-net
 
 ## 変更点
 
+### v1.0.16
+
+#### 追加
+- (Re: 仮)への仮対応
+
 ### v1.0.15
 
 #### 修正
