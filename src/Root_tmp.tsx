@@ -43,7 +43,7 @@ const init = async () => {
     mainContainerPlayer,
     mainContainerComment,
     //CommentRenderer,
-    videoSymbolContainerCanvas,
+    //videoSymbolContainerCanvas,
     videoContainer,
     //mainContainerPlayerPanel,
     videoPlayer: HTMLVideoElement | undefined,
@@ -60,9 +60,9 @@ const init = async () => {
     //CommentRenderer = mainContainer?.getElementsByClassName(
     //  "CommentRenderer",
     //)[0] as HTMLDivElement;
-    videoSymbolContainerCanvas = mainContainerPlayer?.querySelector(
-      "div[data-name=comment]",
-    ) as HTMLDivElement;
+    //videoSymbolContainerCanvas = mainContainerPlayer?.querySelector(
+    //  "div[data-name=comment]",
+    //) as HTMLDivElement;
     videoContainer = mainContainerPlayer?.querySelector(
       "div[data-name=stage]",
     ) as HTMLDivElement;
@@ -77,7 +77,7 @@ const init = async () => {
       mainContainerComment === undefined ||
       //mainContainerPlayerPanel === undefined ||
       //CommentRenderer === undefined ||
-      videoSymbolContainerCanvas === undefined ||
+      //videoSymbolContainerCanvas === undefined ||
       videoContainer === undefined ||
       videoPlayer === undefined ||
       videoPlayer.parentElement === null
@@ -94,7 +94,7 @@ const init = async () => {
     mainContainerComment === undefined ||
     //mainContainerPlayerPanel === undefined ||
     //CommentRenderer === undefined ||
-    videoSymbolContainerCanvas === undefined ||
+    //videoSymbolContainerCanvas === undefined ||
     videoContainer === undefined ||
     videoPlayer === undefined ||
     videoPlayer.parentElement === null
@@ -110,9 +110,12 @@ const init = async () => {
   );
   // z-index
   Array.from(mainContainerPlayer.children).forEach((t: Element, i: number) => {
-    if (i !== 0) {
+    if (i >= 2) {
       const el = t as HTMLDivElement;
-      el.style.pointerEvents = "none";
+      el.style.zIndex = "11";
+      if (i === 3) {
+        el.style.position = "relative";
+      }
     }
   });
   // for tmp make nvapi
@@ -175,17 +178,17 @@ const init = async () => {
   //    Storage.get("options_disable184") === "true" ? "#ff8300" : "#007cff";
   //}
   //replace comment input to textarea
-  const commentInput = mainContainerComment.getElementsByClassName(
-    'before:content_"コメント"',
-  )[0] as HTMLInputElement;
+  const commentInput = mainContainerComment
+    .getElementsByClassName('before:content_"コメント"')[0]
+    ?.getElementsByTagName("input")[0] as HTMLInputElement;
   if (commentInput?.parentElement && postBtnElement) {
     const commentTextarea = document.createElement("textarea");
-    commentTextarea.placeholder = "コメント";
     commentTextarea.className = commentInput.className;
+    commentTextarea.required = commentInput.required;
+    commentTextarea.style.width = "100%";
     commentTextarea.style.height = "100%";
     commentTextarea.style.padding = "8px 16px";
-    commentTextarea.style.borderBottom = "2px solid #dadada";
-    commentTextarea.style.borderTop = "2px solid #dadada";
+    commentTextarea.style.appearance = "none";
     commentTextarea.onkeydown = (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
@@ -220,7 +223,7 @@ const init = async () => {
   );*/
   videoPlayer.parentElement.appendChild(BackgroundImageElement);
   const LayerElement = document.createElement("div");
-  videoSymbolContainerCanvas.after(LayerElement);
+  videoContainer.after(LayerElement);
   //const MemoElement = document.createElement("div");
   //mainContainerPlayerPanel.prepend(MemoElement);
   HeaderElement.id = "dansk:HeaderElement";
