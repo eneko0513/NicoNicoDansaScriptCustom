@@ -75,12 +75,12 @@ const getElementsTmp = async (count = 0): Promise<TElement> => {
   const videoElement = document
       .querySelector("div[data-name=content]")
       ?.getElementsByTagName("video")[0] as HTMLVideoElement,
-    commentCommandInput = mainContainer?.getElementsByClassName(
-      'before:content_"コマンド"',
-    )[0] as HTMLInputElement,
-    commentInputTextarea = mainContainer?.getElementsByClassName(
-      'before:content_"コメント"',
-    )[0] as HTMLTextAreaElement,
+    commentCommandInput = mainContainer
+      ?.getElementsByClassName('before:content_"コマンド"')[0]
+      ?.getElementsByTagName("input")[0] as HTMLInputElement,
+    commentInputTextarea = mainContainer
+      ?.getElementsByClassName('before:content_"コメント"')[0]
+      ?.getElementsByTagName("textarea")[0] as HTMLTextAreaElement,
     videoSymbolContainerCanvas = mainContainer?.querySelector(
       "div[data-name=comment]",
     ) as HTMLCanvasElement,
