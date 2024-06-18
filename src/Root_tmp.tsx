@@ -112,8 +112,7 @@ const init = async () => {
   Array.from(mainContainerPlayer.children).forEach((t: Element, i: number) => {
     if (i !== 0) {
       const el = t as HTMLDivElement;
-      el.style.zIndex = String(11);
-      el.style.position = "relative";
+      el.style.pointerEvents = "none";
     }
   });
   // for tmp make nvapi
@@ -176,10 +175,10 @@ const init = async () => {
   //    Storage.get("options_disable184") === "true" ? "#ff8300" : "#007cff";
   //}
   //replace comment input to textarea
-  const commentInput = mainContainerComment.querySelector(
-    "input[placeholder='コメント']",
-  ) as HTMLInputElement;
-  if (commentInput && commentInput.parentElement && postBtnElement) {
+  const commentInput = mainContainerComment.getElementsByClassName(
+    'before:content_"コメント"',
+  )[0] as HTMLInputElement;
+  if (commentInput?.parentElement && postBtnElement) {
     const commentTextarea = document.createElement("textarea");
     commentTextarea.placeholder = "コメント";
     commentTextarea.className = commentInput.className;
