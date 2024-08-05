@@ -83,6 +83,9 @@ const init = async () => {
   ) {
     throw new Error("fail to get required element");
   }
+  const timeBeforeButton = document.querySelectorAll(
+    "div[role=group] > div > button.cursor_pointer",
+  )[0] as HTMLButtonElement;
   // for tmp make nvapi
   window.__videoplayer = {
     autoplay: () => videoElement.autoplay,
@@ -98,6 +101,9 @@ const init = async () => {
     currentSrc: () => videoElement.currentSrc,
     currentTime: (currentTime) => {
       if (currentTime) {
+        if (currentTime < videoElement.currentTime) {
+          timeBeforeButton.click();
+        }
         videoElement.currentTime = currentTime;
       }
       return videoElement.currentTime;
