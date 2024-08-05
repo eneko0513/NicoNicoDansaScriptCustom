@@ -2,7 +2,7 @@
   font-size: 13px;
   color: white;
   text-align: left;
-  background-color: #333333;
+  background-color: var(--colors-monotone--l15);
   margin: 0;
   padding: 4px 5px;
   cursor: pointer;
@@ -12,6 +12,7 @@
   flex-direction: row;
   height: 23px;
   line-height: 15px;
+  font-weight: var(--font-weights-bold);
   &::before {
     content: "[ ＋ ]";
     display: inline-block;

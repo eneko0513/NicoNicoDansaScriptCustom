@@ -2,10 +2,12 @@
   cursor: pointer;
   height: 24px;
   line-height: 24px;
-  background-color: #bbbbbb;
+  background-color: var(--colors-action-base);
   border-radius: 12px;
   text-align: center;
-  color: white;
+  color: var(--colors-action-text-on-base);
+  fill: var(--colors-action-text-on-base);
+  font-weight: var(--font-weights-bold);
   font-size: 13px;
   padding: 0 12px;
   display: inline-block;
@@ -13,13 +15,14 @@
   border: none;
   margin: 0;
   &:hover {
-    background-color: #006699;
+    background-color: var(--colors-action-base-hover);
   }
   &:disabled {
-    background-color: #e9e9ed;
+    background-color: var(--colors-action-text-on-base_disabled);
   }
   &.active {
-    background-color: #007cff;
+    background-color: var(--colors-action-primary-azure);
+    color: var(--colors-action-text-on-primary-azure);
   }
 }
 .colorButton {

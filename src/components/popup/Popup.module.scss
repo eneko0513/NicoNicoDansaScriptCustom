@@ -12,13 +12,13 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #f4f4f4;
+    background-color: var(--colors-layer-surface-high-em);
     border-radius: 5px;
     overflow: hidden;
     .header {
       height: 25px;
       line-height: 25px;
-      background-color: #333333;
+      background-color: var(--colors-monotone--l15);
       color: white;
       padding: 0 5px;
       display: flex;

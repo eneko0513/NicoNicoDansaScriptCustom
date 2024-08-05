@@ -9,7 +9,7 @@
     font-size: 12px;
     line-height: 12px;
     text-align: center;
-    background-color: #eeeeee;
+    background-color: var(--colors-layer-surface-high-em);
     border: solid 1px #ccc;
   }
   .tips {
@@ -17,7 +17,7 @@
     left: 50%;
     bottom: 100%;
     display: none;
-    background-color: #f4f4f4;
+    background-color: var(--colors-layer-surface-high-em);
     padding: 5px;
     border-radius: 5px;
     border: solid 1px black;

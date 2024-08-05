@@ -36,7 +36,11 @@ const Spoiler: React.FC<propType> = (props) => {
         message={props.message}
         click={() => changeSpoilerVisibility(!spoilerOpen)}
       />
-      {spoilerOpen ? <div>{props.children}</div> : ""}
+      {spoilerOpen ? (
+        <div className={Styles.spoiler}>{props.children}</div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

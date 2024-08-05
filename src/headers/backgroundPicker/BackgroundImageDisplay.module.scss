@@ -13,7 +13,7 @@
     aspect-ratio: 16/9;
     position: relative;
     border: solid 1px;
-    background-color: #777777;
+    background-color: var(--colors-layer-surface-lower-em);
     margin: 12px 12px 0 0;
     &.active {
       background-color: white;
@@ -32,7 +32,7 @@
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      background-color: #f4f4f4;
+      background-color: var(--colors-layer-surface-high-em);
       border: solid 1px black;
       right: 0;
       svg {
