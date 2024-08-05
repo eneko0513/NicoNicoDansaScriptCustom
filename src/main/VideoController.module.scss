@@ -12,6 +12,7 @@
     display: flex;
     flex-direction: column;
     flex: 1;
+    background-color: var(--colors-input-form-background);
     .row {
       flex: 32px;
       line-height: 32px;
@@ -20,6 +21,14 @@
       text-align: center;
       margin: 1px;
       user-select: none;
+      cursor: pointer;
+      color: var(--colors-action-text-on-base);
+      fill: var(--colors-action-text-on-base);
+      background-color: var(--colors-action-base);
+      font-weight: var(--font-weights-bold);
+      &:hover {
+        background-color: var(--colors-action-base-hover);
+      }
     }
   }
 }

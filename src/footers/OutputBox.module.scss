@@ -9,6 +9,9 @@
   .row {
     display: flex;
     flex-direction: row;
+    .block {
+      background-color: var(--colors-input-form-background);
+    }
     .block:not(:last-child) {
       margin-right: 20px;
     }
