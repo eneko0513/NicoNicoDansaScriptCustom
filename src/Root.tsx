@@ -83,6 +83,13 @@ const init = async () => {
   ) {
     throw new Error("fail to get required element");
   }
+  const styleElement = document.createElement("style");
+  document.head.appendChild(styleElement);
+  styleElement.textContent = `
+  div.grid-area_\\[player\\] > div.pos_relative > div > div > div > div.d_flex {
+    z-index: 12;
+  }
+  `;
   const timeBeforeButton = document.querySelectorAll(
     "div[role=group] > div > button.cursor_pointer",
   )[0] as HTMLButtonElement;
