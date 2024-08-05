@@ -446,20 +446,16 @@ const Trace = () => {
             </div>
           </div>
           <div className={`${Styles.row} ${Styles.layer}`}>
-            <div className={Styles.block}>
+            <div className={`${Styles.block} ${Styles.selector}`}>
               <LayerSelector />
             </div>
             <div className={Styles.block}>
-              <LayerEditor />
-            </div>
-            <div className={Styles.block}>
+              <div className={Styles.row}>
+                <LayerEditor />
+              </div>
               <div className={Styles.row}>
                 <Button click={saveToFile} text={"ファイルに保存"} />
-              </div>
-              <div className={Styles.row}>
                 <Button click={loadFromFile} text={"ファイルから読込"} />
-              </div>
-              <div className={Styles.row}>
                 <Button
                   click={loadFromAutoSave}
                   text={"バックアップから読込"}

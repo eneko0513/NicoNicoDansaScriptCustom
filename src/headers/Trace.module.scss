@@ -4,12 +4,19 @@
   .row {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     padding: 2px 0;
+    column-gap: min(20px, 1%);
     &.layer {
       height: 140px;
-    }
-    .block:not(:last-child) {
-      margin-right: 20px;
+      width: 100%;
+      flex-wrap: nowrap;
+      .block {
+        height: 100%;
+        &.selector {
+          width: min(50%, 500px);
+        }
+      }
     }
   }
 }
