@@ -95,6 +95,16 @@ const init = async () => {
     gap: 10px;
   }
   `;
+  const videoController_1 = mainContainer.querySelectorAll(
+    "div[tabindex='0']>div>div.p_base",
+  )[0] as HTMLDivElement;
+  if (videoController_1) {
+    videoController_1.style.position = "relative";
+    videoController_1.style.zIndex = "11";
+  }
+  const seekbarElement = videoController_1.querySelectorAll(
+    "div.pos_relative>div.pos_absolute>div>div",
+  )[2] as HTMLDivElement;
   const timeBeforeButton = document.querySelectorAll(
     "div[role=group] > div > button.cursor_pointer",
   )[0] as HTMLButtonElement;
@@ -113,7 +123,17 @@ const init = async () => {
     currentSrc: () => videoElement.currentSrc,
     currentTime: (currentTime) => {
       if (currentTime) {
-        if (currentTime < videoElement.currentTime) {
+        if (videoElement.currentTime > currentTime) {
+          const b = seekbarElement.getBoundingClientRect();
+          seekbarElement.dispatchEvent(
+            new MouseEvent("click", {
+              view: window,
+              bubbles: true,
+              cancelable: true,
+              clientX: b.left,
+              clientY: b.top,
+            }),
+          );
           timeBeforeButton.click();
         }
         videoElement.currentTime = currentTime;
@@ -183,13 +203,6 @@ const init = async () => {
     },
     { passive: false },
   );
-  const videoController_1 = mainContainer.querySelectorAll(
-    "div[tabindex='0']>div>div.p_base",
-  )[0] as HTMLDivElement;
-  if (videoController_1) {
-    videoController_1.style.position = "relative";
-    videoController_1.style.zIndex = "11";
-  }
   const HeaderElement = document.createElement("div");
   mainContainer.before(HeaderElement);
   const FooterElement = document.createElement("div");
