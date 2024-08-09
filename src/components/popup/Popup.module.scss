@@ -19,7 +19,9 @@
       height: 25px;
       line-height: 25px;
       background-color: var(--colors-monotone--l15);
-      color: white;
+      color: var(--colors-action-text-on-base);
+      fill: var(--colors-action-text-on-base);
+      font-weight: var(--font-weights-bold);
       padding: 0 5px;
       display: flex;
       .title {
@@ -34,7 +36,7 @@
         cursor: pointer;
         display: inline-block;
         svg {
-          fill: white;
+          fill: var(--colors-monotone--l95);
         }
       }
     }

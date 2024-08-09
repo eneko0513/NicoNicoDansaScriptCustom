@@ -1,18 +1,18 @@
 .table {
   display: flex;
   flex-direction: column;
-  border: 1.5px solid #252525;
+  border: 1.5px solid var(--colors-action-text-on-base);
   padding: 5px;
   margin: 5px;
+  width: 100%;
   .row {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     padding: 2px 0;
+    column-gap: min(20px, 2%);
     &.layer {
       height: 140px;
-    }
-    .block:not(:last-child) {
-      margin-right: 20px;
     }
   }
 }
@@ -20,5 +20,5 @@
   position: relative;
   width: 24px;
   height: 24px;
-  outline: solid 1px black;
+  outline: solid 1px var(--colors-action-text-on-base);
 }

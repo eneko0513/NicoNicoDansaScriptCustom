@@ -6,7 +6,7 @@
   cursor: crosshair;
   .display {
     position: absolute;
-    border: solid 1px white;
+    border: solid 1px var(--colors-monotone--l95);
     background: rgba(0, 0, 0, 0.25);
     .top,
     .upperRight,
@@ -45,7 +45,7 @@
       width: 10px;
       height: 10px;
       background-color: rgba(256, 256, 256, 0.75);
-      border: solid 1px black;
+      border: solid 1px var(--colors-action-text-on-base);
       z-index: 2;
     }
     .top,

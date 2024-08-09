@@ -20,7 +20,7 @@
     background-color: var(--colors-layer-surface-high-em);
     padding: 5px;
     border-radius: 5px;
-    border: solid 1px black;
+    border: solid 1px var(--colors-action-text-on-base);
     transform: translateX(-50%);
   }
   &:hover {

@@ -3,22 +3,25 @@
   width: 100%;
   height: 100%;
   overflow-y: scroll;
-  background-color: white;
+  background-color: var(--colors-layer-content-overlay);
   .table {
     border-collapse: collapse;
     width: 100%;
     .tr {
-      border: solid 1px black;
+      border: solid 1px var(--colors-action-text-on-base);
       text-align: center;
+      color: var(--colors-action-text-on-base);
+      fill: var(--colors-action-text-on-base);
       height: 24px;
       &.invalid {
         background-color: #ffcccc;
       }
       &.selected {
-        background: #ccccff;
+        background-color: var(--colors-action-primary-azure);
+        color: var(--colors-action-text-on-primary-azure);
       }
       & > :not(:last-child) {
-        border-right: solid #bbbbbb 1px;
+        border-right: solid var(--colors-action-text-on-base) 1px;
       }
       .icon {
         width: 24px;

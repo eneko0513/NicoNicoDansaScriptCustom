@@ -89,6 +89,11 @@ const init = async () => {
   div.grid-area_\\[player\\] > div.pos_relative > div > div > div > div.d_flex {
     z-index: 12;
   }
+  #dansk\\:FooterElement {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
   `;
   const timeBeforeButton = document.querySelectorAll(
     "div[role=group] > div > button.cursor_pointer",

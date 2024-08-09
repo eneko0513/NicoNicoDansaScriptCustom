@@ -5,7 +5,7 @@
   width: 600px;
   height: 300px;
   overflow-y: scroll;
-  border: solid 1px black;
+  border: solid 1px var(--colors-action-text-on-base);
   padding: 5px;
   .item {
     max-width: calc(50% - 12px);
@@ -16,8 +16,8 @@
     background-color: var(--colors-layer-surface-lower-em);
     margin: 12px 12px 0 0;
     &.active {
-      background-color: white;
-      border: solid blue 1px;
+      background-color: var(--colors-action-text-on-primary-azure);
+      border: solid var(--colors-action-primary-azure) 1px;
     }
     .image {
       width: 100%;
@@ -32,9 +32,14 @@
       width: 20px;
       height: 20px;
       border-radius: 50%;
+      color: var(--colors-action-text-on-base);
+      fill: var(--colors-action-text-on-base);
       background-color: var(--colors-layer-surface-high-em);
-      border: solid 1px black;
+      border: solid 1px var(--colors-action-text-on-base);
       right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       svg {
         transform: scale(70%);
       }
