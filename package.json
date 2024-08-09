@@ -1,6 +1,6 @@
 {
   "name": "dansuku-mizu",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "DanSukuMizu modified by @Negima1072, @eneko0513 and @xpadev-net",
   "main": "dist/index.js",
   "type": "module",
