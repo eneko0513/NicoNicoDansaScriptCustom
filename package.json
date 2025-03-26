@@ -39,7 +39,7 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/chrome": "^0.0.287",
-    "@types/react": "^19.0.10",
+    "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4",
     "@types/sortablejs": "^1.15.8",
     "@vitejs/plugin-react": "^4.3.4",
@@ -47,7 +47,7 @@
     "happy-dom": "^16.8.1",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.0",
-    "sass-embedded": "^1.85.1",
+    "sass-embedded": "^1.86.0",
     "typescript": "^5.8.2",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^2.1.9",
