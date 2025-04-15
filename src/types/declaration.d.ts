@@ -5,7 +5,7 @@ declare module "*.scss" {
 }
 interface Window {
   __videoplayer: NvPlayerApi;
-  __remixRouter: RemixRouter;
+  __reactRouterDataRouter: ReactRouter;
 }
 
 interface Event {
@@ -86,7 +86,7 @@ type PlayerOperation = {
   };
 };
 
-interface RemixRouter {
+interface ReactRouter {
   subscribe: (callback: (state: RouterState) => void) => () => void;
   state: RouterState;
 }
